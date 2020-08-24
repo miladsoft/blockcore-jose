@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -22,7 +22,7 @@
     <PackageReference Include="Blockcore.NBitcoin" Version="1.0.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\jose-jwt\Blockcore.JOSE.csproj">
+    <ProjectReference Include="..\Blockcore.Jose\Blockcore.Jose.csproj">
       <Project>{b93e021f-85eb-4914-9cb8-ccb9de03c991}</Project>
       <Name>Blockcore.JOSE</Name>
     </ProjectReference>
