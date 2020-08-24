@@ -22,10 +22,7 @@
     <PackageReference Include="Blockcore.NBitcoin" Version="1.0.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Blockcore.Jose\Blockcore.Jose.csproj">
-      <Project>{b93e021f-85eb-4914-9cb8-ccb9de03c991}</Project>
-      <Name>Blockcore.JOSE</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Blockcore.Jose\Blockcore.Jose.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ecc256.p12">

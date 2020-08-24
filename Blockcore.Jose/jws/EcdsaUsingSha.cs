@@ -5,7 +5,7 @@ namespace Blockcore.Jose
 {
     public class EcdsaUsingSha : IJwsAlgorithm
     {
-        private int keySize;
+        private readonly int keySize;
 
         public EcdsaUsingSha(int keySize)
         {

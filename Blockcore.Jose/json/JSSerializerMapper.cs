@@ -1,22 +1,22 @@
 namespace Blockcore.Jose
 {
-    public class JSSerializerMapper : IJsonMapper
-    {
-        private static NewtonsoftMapper js;
+   public class JSSerializerMapper : IJsonMapper
+   {
+      private static NewtonsoftMapper js;
 
-        private NewtonsoftMapper JS
-        {
-            get { return js ?? (js = new NewtonsoftMapper()); }
-        }
+      private NewtonsoftMapper JS
+      {
+         get { return js ?? (js = new NewtonsoftMapper()); }
+      }
 
-        public string Serialize(object obj)
-        {
-            return JS.Serialize(obj);
-        }
+      public string Serialize(object obj)
+      {
+         return JS.Serialize(obj);
+      }
 
-        public T Parse<T>(string json)
-        {
-            return JS.Parse<T>(json);
-        }
-    }
+      public T Parse<T>(string json)
+      {
+         return JS.Parse<T>(json);
+      }
+   }
 }

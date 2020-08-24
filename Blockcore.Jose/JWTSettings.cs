@@ -1,16 +1,16 @@
-﻿using Blockcore.Jose.jwe;
+using Blockcore.Jose.jwe;
 using System.Collections.Generic;
 using System;
 
 namespace Blockcore.Jose
 {
-    /// <summary>
-    /// JWT settings object.  JWT has a global DefaultSettings instance that can be used to set global defaults.  Additionally,
-    /// every method in JWT supports adding an optional settings parameter to override the default settings just for that call.
-    /// </summary>
-    public class JwtSettings
-    {
-        private Dictionary<JwsAlgorithm, IJwsAlgorithm> jwsAlgorithms = new Dictionary<JwsAlgorithm, IJwsAlgorithm>
+   /// <summary>
+   /// JWT settings object.  JWT has a global DefaultSettings instance that can be used to set global defaults.  Additionally,
+   /// every method in JWT supports adding an optional settings parameter to override the default settings just for that call.
+   /// </summary>
+   public class JwtSettings
+   {
+      private Dictionary<JwsAlgorithm, IJwsAlgorithm> jwsAlgorithms = new Dictionary<JwsAlgorithm, IJwsAlgorithm>
             {
                 { JwsAlgorithm.none, new Plaintext()},
                 { JwsAlgorithm.HS256, new HmacUsingSha("SHA256") },
@@ -36,7 +36,7 @@ namespace Blockcore.Jose
 #endif
             };
 
-        private Dictionary<JwsAlgorithm, string> jwsAlgorithmsHeaderValue = new Dictionary<JwsAlgorithm, string>
+      private Dictionary<JwsAlgorithm, string> jwsAlgorithmsHeaderValue = new Dictionary<JwsAlgorithm, string>
             {
                 { JwsAlgorithm.none, "none" },
                 { JwsAlgorithm.HS256, "HS256" },
@@ -54,9 +54,9 @@ namespace Blockcore.Jose
                 { JwsAlgorithm.PS512, "PS512" }
             };
 
-        private Dictionary<string, JwsAlgorithm> jwsAlgorithmsAliases = new Dictionary<string, JwsAlgorithm>();
+      private Dictionary<string, JwsAlgorithm> jwsAlgorithmsAliases = new Dictionary<string, JwsAlgorithm>();
 
-        private Dictionary<JweEncryption, IJweAlgorithm> encAlgorithms = new Dictionary<JweEncryption, IJweAlgorithm>
+      private Dictionary<JweEncryption, IJweAlgorithm> encAlgorithms = new Dictionary<JweEncryption, IJweAlgorithm>
             {
                 { JweEncryption.A128CBC_HS256, new AesCbcHmacEncryption(new HmacUsingSha("SHA256"), 256) },
                 { JweEncryption.A192CBC_HS384, new AesCbcHmacEncryption(new HmacUsingSha("SHA384"), 384) },
@@ -67,7 +67,7 @@ namespace Blockcore.Jose
                 { JweEncryption.A256GCM, new AesGcmEncryption(256) }
             };
 
-        private Dictionary<JweEncryption, string> encAlgorithmsHeaderValue = new Dictionary<JweEncryption, string>
+      private Dictionary<JweEncryption, string> encAlgorithmsHeaderValue = new Dictionary<JweEncryption, string>
             {
                 { JweEncryption.A128CBC_HS256, "A128CBC-HS256" },
                 { JweEncryption.A192CBC_HS384, "A192CBC-HS384" },
@@ -77,9 +77,9 @@ namespace Blockcore.Jose
                 { JweEncryption.A256GCM, "A256GCM" },
             };
 
-        private Dictionary<string, JweEncryption> encAlgorithmsAliases = new Dictionary<string, JweEncryption>();
+      private Dictionary<string, JweEncryption> encAlgorithmsAliases = new Dictionary<string, JweEncryption>();
 
-        private Dictionary<JweAlgorithm, IKeyManagement> keyAlgorithms = new Dictionary<JweAlgorithm, IKeyManagement>
+      private Dictionary<JweAlgorithm, IKeyManagement> keyAlgorithms = new Dictionary<JweAlgorithm, IKeyManagement>
             {
                 { JweAlgorithm.RSA_OAEP, new RsaKeyManagement(true) },
                 { JweAlgorithm.RSA_OAEP_256, new RsaOaep256KeyManagement() },
@@ -99,7 +99,7 @@ namespace Blockcore.Jose
                 { JweAlgorithm.A192GCMKW, new AesGcmKeyWrapManagement(192) },
                 { JweAlgorithm.A256GCMKW, new AesGcmKeyWrapManagement(256) }
             };
-        private Dictionary<JweAlgorithm, string> keyAlgorithmsHeaderValue = new Dictionary<JweAlgorithm, string>
+      private Dictionary<JweAlgorithm, string> keyAlgorithmsHeaderValue = new Dictionary<JweAlgorithm, string>
             {
                 { JweAlgorithm.RSA1_5, "RSA1_5" },
                 { JweAlgorithm.RSA_OAEP, "RSA-OAEP" },
@@ -120,221 +120,221 @@ namespace Blockcore.Jose
                 { JweAlgorithm.A256GCMKW, "A256GCMKW" },
             };
 
-        private Dictionary<string, JweAlgorithm> keyAlgorithmsAliases = new Dictionary<string, JweAlgorithm>();
+      private Dictionary<string, JweAlgorithm> keyAlgorithmsAliases = new Dictionary<string, JweAlgorithm>();
 
-        private Dictionary<JweCompression, ICompression> compressionAlgorithms = new Dictionary<JweCompression, ICompression>
+      private Dictionary<JweCompression, ICompression> compressionAlgorithms = new Dictionary<JweCompression, ICompression>
         {
             { JweCompression.DEF, new DeflateCompression() }
         };
 
-        private Dictionary<JweCompression, string> jweCompressionHeaderValue = new Dictionary<JweCompression, string>
+      private Dictionary<JweCompression, string> jweCompressionHeaderValue = new Dictionary<JweCompression, string>
         {
             { JweCompression.DEF, "DEF" }
         };
 
-        private Dictionary<string, JweCompression> compressionAlgorithmsAliases = new Dictionary<string, JweCompression>();
+      private Dictionary<string, JweCompression> compressionAlgorithmsAliases = new Dictionary<string, JweCompression>();
 
-        private IJsonMapper jsMapper = new NewtonsoftMapper();
-      
-        //Builder-style methods
-        public JwtSettings RegisterJwa(JweAlgorithm alg, IKeyManagement impl)
-        {
-            keyAlgorithms[alg] = impl;
-            return this;
-        }
+      private IJsonMapper jsMapper = new NewtonsoftMapper();
 
-        /// <summary>
-        /// Register an alias for the "alg" header that should point to a standard JWA key management algorithm
-        /// </summary>
-        public JwtSettings RegisterJwaAlias(string alias, JweAlgorithm alg)
-        {
-            keyAlgorithmsAliases[alias] = alg;
-            return this;
-        }
+      //Builder-style methods
+      public JwtSettings RegisterJwa(JweAlgorithm alg, IKeyManagement impl)
+      {
+         keyAlgorithms[alg] = impl;
+         return this;
+      }
 
-        /// <summary>
-        /// Register an alias for the "enc" header that should point to a standard JWE encryption algorithm
-        /// </summary>
-        public JwtSettings RegisterJwe(JweEncryption alg, IJweAlgorithm impl)
-        {
-            encAlgorithms[alg] = impl;
-            return this;
-        }
+      /// <summary>
+      /// Register an alias for the "alg" header that should point to a standard JWA key management algorithm
+      /// </summary>
+      public JwtSettings RegisterJwaAlias(string alias, JweAlgorithm alg)
+      {
+         keyAlgorithmsAliases[alias] = alg;
+         return this;
+      }
 
-        /// <summary>
-        /// Register an alias for the "enc" header that should point to a standard JWE encryption algorithm
-        /// </summary>
-        public JwtSettings RegisterJweAlias(string alias, JweEncryption alg)
-        {
-            encAlgorithmsAliases[alias] = alg;
-            return this;
-        }
+      /// <summary>
+      /// Register an alias for the "enc" header that should point to a standard JWE encryption algorithm
+      /// </summary>
+      public JwtSettings RegisterJwe(JweEncryption alg, IJweAlgorithm impl)
+      {
+         encAlgorithms[alg] = impl;
+         return this;
+      }
 
-        public JwtSettings RegisterCompression(JweCompression alg, ICompression impl)
-        {
-            compressionAlgorithms[alg] = impl;
-            return this;
-        }
+      /// <summary>
+      /// Register an alias for the "enc" header that should point to a standard JWE encryption algorithm
+      /// </summary>
+      public JwtSettings RegisterJweAlias(string alias, JweEncryption alg)
+      {
+         encAlgorithmsAliases[alias] = alg;
+         return this;
+      }
 
-        /// <summary>
-        /// Register an alias for the "zip" header that should point to a standard compression algorithm
-        /// </summary>
-        public JwtSettings RegisterCompressionAlias(string alias, JweCompression alg)
-        {
-            compressionAlgorithmsAliases[alias] = alg;
-            return this;
-        }
+      public JwtSettings RegisterCompression(JweCompression alg, ICompression impl)
+      {
+         compressionAlgorithms[alg] = impl;
+         return this;
+      }
+
+      /// <summary>
+      /// Register an alias for the "zip" header that should point to a standard compression algorithm
+      /// </summary>
+      public JwtSettings RegisterCompressionAlias(string alias, JweCompression alg)
+      {
+         compressionAlgorithmsAliases[alias] = alg;
+         return this;
+      }
 
 
-        public JwtSettings RegisterJws(JwsAlgorithm alg, IJwsAlgorithm impl)
-        {
-            jwsAlgorithms[alg] = impl;
+      public JwtSettings RegisterJws(JwsAlgorithm alg, IJwsAlgorithm impl)
+      {
+         jwsAlgorithms[alg] = impl;
 
-            return this;
-        }
-        
-        /// <summary>
-        /// Register an alias for the "alg" header that should point to a standard JWS signing algorithm
-        /// </summary>
-        public JwtSettings RegisterJwsAlias(string alias, JwsAlgorithm alg)
-        {
-            jwsAlgorithmsAliases[alias] = alg;
-            return this;
-        }
+         return this;
+      }
 
-        public JwtSettings RegisterMapper(IJsonMapper mapper)
-        {
-            jsMapper = mapper;
+      /// <summary>
+      /// Register an alias for the "alg" header that should point to a standard JWS signing algorithm
+      /// </summary>
+      public JwtSettings RegisterJwsAlias(string alias, JwsAlgorithm alg)
+      {
+         jwsAlgorithmsAliases[alias] = alg;
+         return this;
+      }
 
-            return this;
-        }
+      public JwtSettings RegisterMapper(IJsonMapper mapper)
+      {
+         jsMapper = mapper;
 
-        //Properties
-        public IJsonMapper JsonMapper
-        {
-            get { return jsMapper; }
-            set { jsMapper = value; }
-        }
+         return this;
+      }
 
-        //JWS signing algorithm
-        public IJwsAlgorithm Jws(JwsAlgorithm alg)
-        {
-            IJwsAlgorithm impl;
-            return jwsAlgorithms.TryGetValue(alg, out impl) ? impl : null;
-        }
+      //Properties
+      public IJsonMapper JsonMapper
+      {
+         get { return jsMapper; }
+         set { jsMapper = value; }
+      }
 
-        public string JwsHeaderValue(JwsAlgorithm algorithm)
-        {
-            return jwsAlgorithmsHeaderValue[algorithm];
-        }
+      //JWS signing algorithm
+      public IJwsAlgorithm Jws(JwsAlgorithm alg)
+      {
+         IJwsAlgorithm impl;
+         return jwsAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+      }
 
-        public JwsAlgorithm JwsAlgorithmFromHeader(string headerValue)
-        {
-            foreach (var pair in jwsAlgorithmsHeaderValue)
-            {
-                if (pair.Value.Equals(headerValue)) return pair.Key;
-            }
+      public string JwsHeaderValue(JwsAlgorithm algorithm)
+      {
+         return jwsAlgorithmsHeaderValue[algorithm];
+      }
 
-            //try alias
-            JwsAlgorithm aliasMatch;
-            if (jwsAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
-            {
-                return aliasMatch;
-            }
+      public JwsAlgorithm JwsAlgorithmFromHeader(string headerValue)
+      {
+         foreach (var pair in jwsAlgorithmsHeaderValue)
+         {
+            if (pair.Value.Equals(headerValue)) return pair.Key;
+         }
 
-            throw new InvalidAlgorithmException(string.Format("JWS algorithm is not supported: {0}", headerValue));
-        }
+         //try alias
+         JwsAlgorithm aliasMatch;
+         if (jwsAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         {
+            return aliasMatch;
+         }
 
-        //JWE encryption algorithm
-        public IJweAlgorithm Jwe(JweEncryption alg)
-        {
-            IJweAlgorithm impl;
-            return encAlgorithms.TryGetValue(alg, out impl) ? impl : null; ;
-        }
+         throw new InvalidAlgorithmException(string.Format("JWS algorithm is not supported: {0}", headerValue));
+      }
 
-        public string JweHeaderValue(JweEncryption algorithm)
-        {
-            return encAlgorithmsHeaderValue[algorithm];
-        }
+      //JWE encryption algorithm
+      public IJweAlgorithm Jwe(JweEncryption alg)
+      {
+         IJweAlgorithm impl;
+         return encAlgorithms.TryGetValue(alg, out impl) ? impl : null; ;
+      }
 
-        public JweEncryption JweAlgorithmFromHeader(string headerValue)
-        {
-            foreach (var pair in encAlgorithmsHeaderValue)
-            {
-                if (pair.Value.Equals(headerValue)) return pair.Key;
-            }
+      public string JweHeaderValue(JweEncryption algorithm)
+      {
+         return encAlgorithmsHeaderValue[algorithm];
+      }
 
-            //try alias
-            JweEncryption aliasMatch;
+      public JweEncryption JweAlgorithmFromHeader(string headerValue)
+      {
+         foreach (var pair in encAlgorithmsHeaderValue)
+         {
+            if (pair.Value.Equals(headerValue)) return pair.Key;
+         }
 
-            if (encAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
-            {
-                return aliasMatch;
-            }
-            throw new InvalidAlgorithmException(string.Format("JWE algorithm is not supported: {0}", headerValue));
-        }
+         //try alias
+         JweEncryption aliasMatch;
 
-        //JWA algorithm
-        public IKeyManagement Jwa(JweAlgorithm alg)
-        {
-            IKeyManagement impl;
-            return keyAlgorithms.TryGetValue(alg, out impl) ? impl : null;
-        }
+         if (encAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         {
+            return aliasMatch;
+         }
+         throw new InvalidAlgorithmException(string.Format("JWE algorithm is not supported: {0}", headerValue));
+      }
 
-        public string JwaHeaderValue(JweAlgorithm alg)
-        {
-            return keyAlgorithmsHeaderValue[alg];
-        }
+      //JWA algorithm
+      public IKeyManagement Jwa(JweAlgorithm alg)
+      {
+         IKeyManagement impl;
+         return keyAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+      }
 
-        public JweAlgorithm JwaAlgorithmFromHeader(string headerValue)
-        {
-            foreach (var pair in keyAlgorithmsHeaderValue)
-            {
-                if (pair.Value.Equals(headerValue)) return pair.Key;
-            }
+      public string JwaHeaderValue(JweAlgorithm alg)
+      {
+         return keyAlgorithmsHeaderValue[alg];
+      }
 
-            //try alias
-            JweAlgorithm aliasMatch;
-            if (keyAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
-            {
-                return aliasMatch;
-            }
-            throw new InvalidAlgorithmException(string.Format("JWA algorithm is not supported: {0}.", headerValue));
-        }
+      public JweAlgorithm JwaAlgorithmFromHeader(string headerValue)
+      {
+         foreach (var pair in keyAlgorithmsHeaderValue)
+         {
+            if (pair.Value.Equals(headerValue)) return pair.Key;
+         }
 
-        //Compression
-        public ICompression Compression(JweCompression alg)
-        {
-            ICompression impl;
-            return compressionAlgorithms.TryGetValue(alg, out impl) ? impl : null;
-        }
+         //try alias
+         JweAlgorithm aliasMatch;
+         if (keyAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         {
+            return aliasMatch;
+         }
+         throw new InvalidAlgorithmException(string.Format("JWA algorithm is not supported: {0}.", headerValue));
+      }
 
-        public ICompression Compression(string alg)
-        {
-            return Compression(CompressionAlgFromHeader(alg));
-        }
+      //Compression
+      public ICompression Compression(JweCompression alg)
+      {
+         ICompression impl;
+         return compressionAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+      }
 
-        public string CompressionHeader(JweCompression value)
-        {
-            return jweCompressionHeaderValue[value];
-        }
+      public ICompression Compression(string alg)
+      {
+         return Compression(CompressionAlgFromHeader(alg));
+      }
 
-        public JweCompression CompressionAlgFromHeader(string header)
-        {
-            foreach (var pair in jweCompressionHeaderValue)
-            {
-                if (pair.Value.Equals(header)) return pair.Key;
-            }
+      public string CompressionHeader(JweCompression value)
+      {
+         return jweCompressionHeaderValue[value];
+      }
 
-            //try alias
-            JweCompression aliasMatch;
+      public JweCompression CompressionAlgFromHeader(string header)
+      {
+         foreach (var pair in jweCompressionHeaderValue)
+         {
+            if (pair.Value.Equals(header)) return pair.Key;
+         }
 
-            if (compressionAlgorithmsAliases.TryGetValue(header, out aliasMatch))
-            {
-                return aliasMatch;
-            }
+         //try alias
+         JweCompression aliasMatch;
 
-            throw new InvalidAlgorithmException(string.Format("Compression algorithm is not supported: {0}.", header));
-        }
-    }
+         if (compressionAlgorithmsAliases.TryGetValue(header, out aliasMatch))
+         {
+            return aliasMatch;
+         }
+
+         throw new InvalidAlgorithmException(string.Format("Compression algorithm is not supported: {0}.", header));
+      }
+   }
 }

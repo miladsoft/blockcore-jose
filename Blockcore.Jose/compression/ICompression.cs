@@ -1,8 +1,8 @@
 namespace Blockcore.Jose
 {
-    public interface ICompression
-    {
-        byte[] Compress(byte[] plainText);
-        byte[] Decompress(byte[] compressedText);
-    }
+   public interface ICompression
+   {
+      byte[] Compress(byte[] plainText);
+      byte[] Decompress(byte[] compressedText);
+   }
 }

@@ -4,74 +4,74 @@ using Blockcore.Jose.native;
 
 namespace Blockcore.Jose
 {
-    public static class RsaPss
-    {
-        public static byte[] Sign(byte[] input, CngKey key, CngAlgorithm hash, int saltSize)
-        {
-            using (HashAlgorithm algo = HashAlgorithm(hash))
-            {
-                return SignHash(algo.ComputeHash(input), key, hash.Algorithm, saltSize);
-            }
-        }
+   public static class RsaPss
+   {
+      public static byte[] Sign(byte[] input, CngKey key, CngAlgorithm hash, int saltSize)
+      {
+         using (HashAlgorithm algo = HashAlgorithm(hash))
+         {
+            return SignHash(algo.ComputeHash(input), key, hash.Algorithm, saltSize);
+         }
+      }
 
-        public static bool Verify(byte[] securedInput, byte[] signature, CngKey key, CngAlgorithm hash, int saltSize)
-        {
-            using (HashAlgorithm algo = HashAlgorithm(hash))
-            {
-                return VerifyHash(algo.ComputeHash(securedInput),signature, key, hash.Algorithm, saltSize);
-            }
-        }
+      public static bool Verify(byte[] securedInput, byte[] signature, CngKey key, CngAlgorithm hash, int saltSize)
+      {
+         using (HashAlgorithm algo = HashAlgorithm(hash))
+         {
+            return VerifyHash(algo.ComputeHash(securedInput), signature, key, hash.Algorithm, saltSize);
+         }
+      }
 
-        private static bool VerifyHash(byte[] hash, byte[] signature, CngKey key, string algorithm, int saltSize)
-        {
-            var paddingInfo = new BCrypt.BCRYPT_PSS_PADDING_INFO(algorithm, saltSize);
+      private static bool VerifyHash(byte[] hash, byte[] signature, CngKey key, string algorithm, int saltSize)
+      {
+         var paddingInfo = new BCrypt.BCRYPT_PSS_PADDING_INFO(algorithm, saltSize);
 
-            uint status = NCrypt.NCryptVerifySignature(key.Handle, ref paddingInfo, hash, hash.Length, signature, signature.Length, BCrypt.BCRYPT_PAD_PSS);
+         uint status = NCrypt.NCryptVerifySignature(key.Handle, ref paddingInfo, hash, hash.Length, signature, signature.Length, BCrypt.BCRYPT_PAD_PSS);
 
-            if (status == NCrypt.NTE_BAD_SIGNATURE) //honestly it always failing with NTE_INVALID_PARAMETER, but let's stick to public API
-                return false;
+         if (status == NCrypt.NTE_BAD_SIGNATURE) //honestly it always failing with NTE_INVALID_PARAMETER, but let's stick to public API
+            return false;
 
-            if (status != BCrypt.ERROR_SUCCESS)
-                throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() (signature size) failed with status code:{0}", status));
+         if (status != BCrypt.ERROR_SUCCESS)
+            throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() (signature size) failed with status code:{0}", status));
 
-            return true;
-        }
+         return true;
+      }
 
-        private static byte[] SignHash(byte[] hash, CngKey key, string algorithm, int saltSize)
-        {
-            var paddingIndo=new BCrypt.BCRYPT_PSS_PADDING_INFO(algorithm, saltSize);
+      private static byte[] SignHash(byte[] hash, CngKey key, string algorithm, int saltSize)
+      {
+         var paddingIndo = new BCrypt.BCRYPT_PSS_PADDING_INFO(algorithm, saltSize);
 
-            uint size;
-            uint status;
+         uint size;
+         uint status;
 
-            status = NCrypt.NCryptSignHash(key.Handle, ref paddingIndo, hash, hash.Length, null, 0, out size,BCrypt.BCRYPT_PAD_PSS);
+         status = NCrypt.NCryptSignHash(key.Handle, ref paddingIndo, hash, hash.Length, null, 0, out size, BCrypt.BCRYPT_PAD_PSS);
 
-            if (status != BCrypt.ERROR_SUCCESS)
-                throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() (signature size) failed with status code:{0}", status));
+         if (status != BCrypt.ERROR_SUCCESS)
+            throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() (signature size) failed with status code:{0}", status));
 
-            byte[] signature=new byte[size];
+         byte[] signature = new byte[size];
 
-            status = NCrypt.NCryptSignHash(key.Handle, ref paddingIndo, hash, hash.Length, signature, signature.Length, out size, BCrypt.BCRYPT_PAD_PSS);
+         status = NCrypt.NCryptSignHash(key.Handle, ref paddingIndo, hash, hash.Length, signature, signature.Length, out size, BCrypt.BCRYPT_PAD_PSS);
 
-            if (status != BCrypt.ERROR_SUCCESS)
-                throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() failed with status code:{0}", status));
+         if (status != BCrypt.ERROR_SUCCESS)
+            throw new CryptographicException(string.Format("NCrypt.NCryptSignHash() failed with status code:{0}", status));
 
-            return signature;
-        }
+         return signature;
+      }
 
 
-        private static HashAlgorithm HashAlgorithm(CngAlgorithm hash)
-        {
-            //if (hash == CngAlgorithm.Sha256)
-            //    return SHA256.Create();
-            //if (hash == CngAlgorithm.Sha384)
-            //    return SHA384.Create();
-            //if (hash == CngAlgorithm.Sha512)
-            //    return SHA512.Create();
-            
-            //throw new ArgumentException(string.Format("RsaPss expects hash function to be SHA256, SHA384 or SHA512, but was given:{0}",hash));
-            
-            throw new NotImplementedException("not yet");
-        }
-    }
+      private static HashAlgorithm HashAlgorithm(CngAlgorithm hash)
+      {
+         //if (hash == CngAlgorithm.Sha256)
+         //    return SHA256.Create();
+         //if (hash == CngAlgorithm.Sha384)
+         //    return SHA384.Create();
+         //if (hash == CngAlgorithm.Sha512)
+         //    return SHA512.Create();
+
+         //throw new ArgumentException(string.Format("RsaPss expects hash function to be SHA256, SHA384 or SHA512, but was given:{0}",hash));
+
+         throw new NotImplementedException("not yet");
+      }
+   }
 }

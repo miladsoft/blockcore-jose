@@ -3,7 +3,7 @@ using System.IO.Compression;
 
 namespace Blockcore.Jose
 {
-    public class DeflateCompression : ICompression
+   public class DeflateCompression : ICompression
     {
         public byte[] Compress(byte[] plainText)
         {

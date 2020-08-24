@@ -5,82 +5,82 @@ using Security.Cryptography;
 
 namespace Blockcore.Jose
 {
-    public class RsaKeyManagement:IKeyManagement
-    {        
-        private bool useRsaOaepPadding; //true for RSA-OAEP, false for RSA-PKCS#1 v1.5
-        
-        public RsaKeyManagement(bool useRsaOaepPadding)
-        {
-            this.useRsaOaepPadding = useRsaOaepPadding;
-        }
+   public class RsaKeyManagement : IKeyManagement
+   {
+      private bool useRsaOaepPadding; //true for RSA-OAEP, false for RSA-PKCS#1 v1.5
 
-        public byte[][] WrapNewKey(int cekSizeBits, object key, IDictionary<string, object> header)
-        {
-            var cek = Arrays.Random(cekSizeBits);
+      public RsaKeyManagement(bool useRsaOaepPadding)
+      {
+         this.useRsaOaepPadding = useRsaOaepPadding;
+      }
 
-            if (key is CngKey)
-            {
-                var publicKey = new RSACng((CngKey) key);
+      public byte[][] WrapNewKey(int cekSizeBits, object key, IDictionary<string, object> header)
+      {
+         var cek = Arrays.Random(cekSizeBits);
 
-                var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
-                                                  RSAEncryptionPadding.Pkcs1;
+         if (key is CngKey)
+         {
+            var publicKey = new RSACng((CngKey)key);
 
-                return new[] { cek, publicKey.Encrypt(cek, padding) };
-            }
+            var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
+                                              RSAEncryptionPadding.Pkcs1;
 
-            if (key is RSACryptoServiceProvider)
-            {
-                var publicKey = (RSACryptoServiceProvider) key;
+            return new[] { cek, publicKey.Encrypt(cek, padding) };
+         }
 
-                return new[] { cek, publicKey.Encrypt(cek, useRsaOaepPadding) };
-            }
+         if (key is RSACryptoServiceProvider)
+         {
+            var publicKey = (RSACryptoServiceProvider)key;
 
-            if (key is RSA)
-            {
-                var publicKey = (RSA) key;
+            return new[] { cek, publicKey.Encrypt(cek, useRsaOaepPadding) };
+         }
 
-                var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
-                                                  RSAEncryptionPadding.Pkcs1;
+         if (key is RSA)
+         {
+            var publicKey = (RSA)key;
 
-                return new[] { cek, publicKey.Encrypt(cek, padding) };
-            }
+            var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
+                                              RSAEncryptionPadding.Pkcs1;
 
-            throw new ArgumentException("RsaKeyManagement algorithm expects key to be of either CngKey, RSACryptoServiceProvider or RSA types.");
+            return new[] { cek, publicKey.Encrypt(cek, padding) };
+         }
 
-        }
+         throw new ArgumentException("RsaKeyManagement algorithm expects key to be of either CngKey, RSACryptoServiceProvider or RSA types.");
 
-        public byte[] Unwrap(byte[] encryptedCek, object key, int cekSizeBits, IDictionary<string, object> header)
-        {
+      }
 
-            if (key is CngKey)
-            {
-                var privateKey = new RSACng((CngKey)key);
+      public byte[] Unwrap(byte[] encryptedCek, object key, int cekSizeBits, IDictionary<string, object> header)
+      {
 
-                var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
-                                                  RSAEncryptionPadding.Pkcs1;
+         if (key is CngKey)
+         {
+            var privateKey = new RSACng((CngKey)key);
 
-                return privateKey.Decrypt(encryptedCek, padding);
-            }
+            var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
+                                              RSAEncryptionPadding.Pkcs1;
 
-            if (key is RSACryptoServiceProvider)
-            {
-                var privateKey = (RSACryptoServiceProvider) key;
+            return privateKey.Decrypt(encryptedCek, padding);
+         }
 
-                return privateKey.Decrypt(encryptedCek, useRsaOaepPadding);
-            }
+         if (key is RSACryptoServiceProvider)
+         {
+            var privateKey = (RSACryptoServiceProvider)key;
 
-            if (key is RSA)
-            {
-                var privateKey = (RSA) key;
+            return privateKey.Decrypt(encryptedCek, useRsaOaepPadding);
+         }
 
-                var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
-                                                  RSAEncryptionPadding.Pkcs1;
+         if (key is RSA)
+         {
+            var privateKey = (RSA)key;
 
-                return privateKey.Decrypt(encryptedCek, padding);
-            }
+            var padding = useRsaOaepPadding ? RSAEncryptionPadding.OaepSHA1 :
+                                              RSAEncryptionPadding.Pkcs1;
 
-            throw new ArgumentException("RsaKeyManagement algorithm expects key to be of either CngKey, RSACryptoServiceProvider or RSA types.");
+            return privateKey.Decrypt(encryptedCek, padding);
+         }
 
-        }
-    }
+         throw new ArgumentException("RsaKeyManagement algorithm expects key to be of either CngKey, RSACryptoServiceProvider or RSA types.");
+
+      }
+   }
 }
