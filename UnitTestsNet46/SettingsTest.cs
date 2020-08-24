@@ -256,12 +256,13 @@ namespace UnitTests
 
         #region test utils
 
-        private RSACryptoServiceProvider PrivKey()
+        private RSACng PrivKey()
         {
-            var key = (RSACryptoServiceProvider)X509().PrivateKey;
+            var key = (RSACng)X509().PrivateKey;
+            RSACng newKey = new RSACng(key.Key);
 
-            RSACryptoServiceProvider newKey = new RSACryptoServiceProvider();
-            newKey.ImportParameters(key.ExportParameters(true));
+            //RSACryptoServiceProvider newKey = new RSACryptoServiceProvider();
+            //newKey.ImportParameters(key.ExportParameters(true));
 
             return newKey;
         }
@@ -271,9 +272,9 @@ namespace UnitTests
             return new X509Certificate2("jwt-2048.p12", "1", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
         }
 
-        private RSACryptoServiceProvider PubKey()
+        private RSACng PubKey()
         {
-            return (RSACryptoServiceProvider)X509().PublicKey.Key;
+            return (RSACng)X509().PublicKey.Key;
         }
         #endregion
 

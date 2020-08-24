@@ -2702,7 +2702,7 @@ namespace UnitTests
             Assert.Equal(tokenHeaders.Count(), 4);
             Assert.Equal(tokenHeaders["alg"], "HS256");
             Assert.Equal(tokenHeaders["b64"], false);
-            Assert.Equal(tokenHeaders["exp"], 1363284000);
+            Assert.Equal(tokenHeaders["exp"], (long)1363284000);
             Assert.Equal(tokenHeaders["crit"], new [] {"b64", "exp"});
         }
 
@@ -2851,12 +2851,13 @@ namespace UnitTests
 
         #region test utils
 
-        private RSACryptoServiceProvider PrivKey()
+        private RSACng PrivKey()
         {
-            var key = (RSACryptoServiceProvider)X509().PrivateKey;
+            var key = (RSACng)X509().PrivateKey;
 
-            RSACryptoServiceProvider newKey = new RSACryptoServiceProvider();
-            newKey.ImportParameters(key.ExportParameters(true));
+            RSACng newKey = new RSACng(key.Key);
+            //RSACryptoServiceProvider newKey = new RSACryptoServiceProvider();
+            //newKey.ImportParameters(key.ExportParameters(true));
 
             return newKey;
         }
@@ -2866,9 +2867,9 @@ namespace UnitTests
             return X509().GetRSAPrivateKey();
         }
 
-        private RSACryptoServiceProvider PubKey()
+        private RSACng PubKey()
         {
-            return (RSACryptoServiceProvider)X509().PublicKey.Key;
+            return (RSACng)X509().PublicKey.Key;
         }
 
         private RSA PubRsaKey()

@@ -1,15 +1,12 @@
-#if NET40 || NET461
-using System.Web.Script.Serialization;
-
 namespace Jose
 {
-    public class JSSerializerMapper:IJsonMapper
+    public class JSSerializerMapper : IJsonMapper
     {
-        private static JavaScriptSerializer js;
+        private static NewtonsoftMapper js;
 
-        private JavaScriptSerializer JS
+        private NewtonsoftMapper JS
         {
-            get { return js ?? (js = new JavaScriptSerializer()); }
+            get { return js ?? (js = new NewtonsoftMapper()); }
         }
 
         public string Serialize(object obj)
@@ -19,8 +16,7 @@ namespace Jose
 
         public T Parse<T>(string json)
         {
-            return JS.Deserialize<T>(json);
+            return JS.Parse<T>(json);
         }
     }
 }
-#endif
