@@ -1,4 +1,10 @@
-# Ultimate Javascript Object Signing and Encryption (JOSE) and JSON Web Token (JWT) Implementation for .NET and .NET Core
+# Blockcore Javascript Object Signing and Encryption (JOSE) for .NET
+
+Fork of the [jose-jwt](https://github.com/dvsekhvalnov/jose-jwt) library, with support for .NET Framework and .NET Standard removed.
+
+This library only supports the latest version of .NET Core (and soon .NET 5).
+
+## Introduction
 
 Minimallistic zero-dependency library for generating, decoding and encryption [JSON Web Tokens](http://tools.ietf.org/html/draft-jones-json-web-token-10). Supports full suite
 of [JSON Web Algorithms](https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-31) as of July 4, 2014 version. JSON parsing agnostic, can plug any desired JSON processing library.
