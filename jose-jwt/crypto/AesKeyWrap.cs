@@ -79,13 +79,12 @@ namespace Jose
 
         private static byte[] AesDec(byte[] sharedKey, byte[] cipherText)
         {
-        #if NET40 || NET461
             using (Aes aes = new AesCryptoServiceProvider())
             {
                 aes.Key = sharedKey;
                 aes.Mode = CipherMode.ECB;
                 aes.Padding = PaddingMode.None;
-                
+
                 using (MemoryStream ms = new MemoryStream())
                 {
                     using (ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
@@ -100,33 +99,10 @@ namespace Jose
                     }
                 }
             }
-        #elif NETSTANDARD1_4
-            using (Aes aes = System.Security.Cryptography.Aes.Create())
-            {
-                aes.Key = sharedKey;
-                aes.Mode = CipherMode.ECB;
-                aes.Padding = PaddingMode.None;
-               
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
-                    {
-                        using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
-                        {
-                            cs.Write(cipherText, 0, cipherText.Length);
-                            cs.FlushFinalBlock();
- 
-                            return ms.ToArray();
-                        }
-                    }
-                }
-            }
-        #endif
         }
 
         private static byte[] AesEnc(byte[] sharedKey, byte[] plainText)
         {
-        #if NET40 || NET461
             using (Aes aes = new AesCryptoServiceProvider())
             {
                 aes.Key = sharedKey;
@@ -147,28 +123,6 @@ namespace Jose
                     }
                 }
             }
-        #elif NETSTANDARD1_4
-            using (Aes aes = System.Security.Cryptography.Aes.Create())
-            {
-                aes.Key = sharedKey;
-                aes.Mode = CipherMode.ECB;
-                aes.Padding = PaddingMode.None;
- 
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
-                    {
-                        using (CryptoStream encrypt = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                        {
-                            encrypt.Write(plainText, 0, plainText.Length);
-                            encrypt.FlushFinalBlock();
- 
-                            return ms.ToArray();
-                        }
-                    }
-                }
-            }
-        #endif
         }
     }
 }
