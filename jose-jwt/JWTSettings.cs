@@ -29,9 +29,10 @@ namespace Jose
                 { JwsAlgorithm.ES384, new EcdsaUsingSha(384) },
                 { JwsAlgorithm.ES512, new EcdsaUsingSha(521) }
 #elif NETSTANDARD1_4 || NET461
-                { JwsAlgorithm.ES256, new Jose.netstandard1_4.EcdsaUsingSha(256) },
-                { JwsAlgorithm.ES384, new Jose.netstandard1_4.EcdsaUsingSha(384) },
-                { JwsAlgorithm.ES512, new Jose.netstandard1_4.EcdsaUsingSha(521) }
+                { JwsAlgorithm.ES256, new EcdsaUsingSha(256) },
+                { JwsAlgorithm.ES384, new EcdsaUsingSha(384) },
+                { JwsAlgorithm.ES512, new EcdsaUsingSha(521) },
+                { JwsAlgorithm.ES256K, new EcdsaUsingSECP256K1Sha() }
 #endif
             };
 
@@ -45,11 +46,12 @@ namespace Jose
                 { JwsAlgorithm.RS384, "RS384" },
                 { JwsAlgorithm.RS512, "RS512" },
                 { JwsAlgorithm.ES256, "ES256" },
+                { JwsAlgorithm.ES256K, "ES256K" },
                 { JwsAlgorithm.ES384, "ES384" },
                 { JwsAlgorithm.ES512, "ES512" },
                 { JwsAlgorithm.PS256, "PS256" },
                 { JwsAlgorithm.PS384, "PS384" },
-                { JwsAlgorithm.PS512, "PS512" },
+                { JwsAlgorithm.PS512, "PS512" }
             };
 
         private Dictionary<string, JwsAlgorithm> jwsAlgorithmsAliases = new Dictionary<string, JwsAlgorithm>();

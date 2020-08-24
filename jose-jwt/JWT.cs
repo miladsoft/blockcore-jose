@@ -18,9 +18,10 @@ namespace Jose
         PS256,
         PS384,
         PS512,
-        ES256, // ECDSA using P-256 curve and SHA-256 hash 
-        ES384, // ECDSA using P-384 curve and SHA-384 hash 
-        ES512  // ECDSA using P-521 curve and SHA-512 hash 
+        ES256, // ECDSA using P-256 curve and SHA-256 hash
+        ES384, // ECDSA using P-384 curve and SHA-384 hash
+        ES512,  // ECDSA using P-521 curve and SHA-512 hash
+        ES256K  // secp256k1 curve
     }
 
     public enum JweAlgorithm

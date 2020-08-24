@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Jose.netstandard1_4
+namespace Jose
 {
     public class EcdsaUsingSha : IJwsAlgorithm
     {
