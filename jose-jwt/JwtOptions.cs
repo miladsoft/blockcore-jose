@@ -1,4 +1,4 @@
-﻿namespace Jose
+﻿namespace Blockcore.Jose
 {
     /// <summary>
     /// Contains various options affecting token encoding/decoding.

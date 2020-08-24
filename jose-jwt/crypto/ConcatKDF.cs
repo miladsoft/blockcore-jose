@@ -1,9 +1,9 @@
 using System;
 using System.Security.Cryptography;
-using Jose.native;
+using Blockcore.Jose.native;
 using Microsoft.Win32.SafeHandles;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class ConcatKDF
     {

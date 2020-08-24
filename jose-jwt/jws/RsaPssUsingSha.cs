@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using Security.Cryptography;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class RsaPssUsingSha : IJwsAlgorithm
     {

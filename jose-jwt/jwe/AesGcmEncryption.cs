@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
-using Jose.jwe;
+using Blockcore.Jose.jwe;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class AesGcmEncryption : IJweAlgorithm
     {

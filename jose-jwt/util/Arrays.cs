@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class Arrays
     {

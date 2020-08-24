@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
-using Jose;
+using Blockcore.Jose;
 using Security.Cryptography;
 using Xunit;
 
@@ -112,7 +112,7 @@ namespace UnitTests
                 //if we reach that point HMAC check was bypassed although the decrypted data is different
                 Assert.True(false, "JoseException should be raised.");
             }
-            catch (Jose.IntegrityException e)
+            catch (Blockcore.Jose.IntegrityException e)
             {
                 Console.WriteLine(e);
             }

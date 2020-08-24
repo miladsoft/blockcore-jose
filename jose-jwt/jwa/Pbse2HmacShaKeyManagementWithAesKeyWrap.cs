@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class Pbse2HmacShaKeyManagementWithAesKeyWrap : IKeyManagement
     {

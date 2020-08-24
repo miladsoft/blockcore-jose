@@ -3,7 +3,7 @@ using NBitcoin.Crypto;
 using System;
 using System.Security.Cryptography;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class EcdsaUsingSECP256K1Sha : IJwsAlgorithm
     {

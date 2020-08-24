@@ -1,8 +1,8 @@
-﻿using Jose.jwe;
+﻿using Blockcore.Jose.jwe;
 using System.Collections.Generic;
 using System;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     /// <summary>
     /// JWT settings object.  JWT has a global DefaultSettings instance that can be used to set global defaults.  Additionally,

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Jose.native
+namespace Blockcore.Jose.native
 {
     public static class BCrypt
     {

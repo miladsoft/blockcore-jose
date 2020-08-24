@@ -1,8 +1,8 @@
 using System;
 using System.Security.Cryptography;
-using Jose.native;
+using Blockcore.Jose.native;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public static class RsaOaep
     {

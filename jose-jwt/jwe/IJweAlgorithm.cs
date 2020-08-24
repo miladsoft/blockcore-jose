@@ -1,4 +1,4 @@
-﻿namespace Jose.jwe
+﻿namespace Blockcore.Jose.jwe
 {
     public interface IJweAlgorithm
     {

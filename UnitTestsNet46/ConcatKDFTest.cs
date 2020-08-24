@@ -1,5 +1,5 @@
 using System.Security.Cryptography;
-using Jose;
+using Blockcore.Jose;
 using Security.Cryptography;
 
 using Xunit;

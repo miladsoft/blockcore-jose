@@ -1,4 +1,4 @@
-namespace Jose
+namespace Blockcore.Jose
 {
     public interface IJsonMapper
     {

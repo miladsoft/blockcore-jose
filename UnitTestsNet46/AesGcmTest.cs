@@ -1,5 +1,5 @@
 using System.Text;
-using Jose;
+using Blockcore.Jose;
 using Xunit;
 
 namespace UnitTests

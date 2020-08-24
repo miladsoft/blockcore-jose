@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using Jose.jwe;
+using Blockcore.Jose.jwe;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class AesCbcHmacEncryption : IJweAlgorithm
     {

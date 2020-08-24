@@ -1,6 +1,6 @@
 using System;
 using System.Security.Cryptography;
-using Jose;
+using Blockcore.Jose;
 
 namespace Security.Cryptography
 {

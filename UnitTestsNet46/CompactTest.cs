@@ -1,4 +1,4 @@
-using Jose;
+using Blockcore.Jose;
 using Xunit;
 using Xunit.Abstractions;
 

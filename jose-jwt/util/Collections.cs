@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class Collections
     {

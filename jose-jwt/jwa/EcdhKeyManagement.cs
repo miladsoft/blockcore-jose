@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Security.Cryptography;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class EcdhKeyManagement : IKeyManagement
     {

@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class Compact
     {

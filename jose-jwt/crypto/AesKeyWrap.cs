@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public static class AesKeyWrap
     {

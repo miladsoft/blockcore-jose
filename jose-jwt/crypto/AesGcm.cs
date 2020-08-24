@@ -2,9 +2,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using Jose.native;
+using Blockcore.Jose.native;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public static class AesGcm
     {

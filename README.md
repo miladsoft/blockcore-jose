@@ -106,7 +106,7 @@ var payload = new Dictionary<string, object>()
     { "exp", 1300819380 }
 };
 
-string token = Jose.JWT.Encode(payload, null, JwsAlgorithm.none);
+string token = JWT.Encode(payload, null, JwsAlgorithm.none);
 ```
 
 **Warning:** When using a `class` as the data structure of the payload, always use nullable data types for its properties. [details](#potential-security-risk)
@@ -124,7 +124,7 @@ var payload = new Dictionary<string, object>()
 
 var secretKey = new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string token=Jose.JWT.Encode(payload, secretKey, JwsAlgorithm.HS256);
+string token=JWT.Encode(payload, secretKey, JwsAlgorithm.HS256);
 ```
 #### RS-\* and PS-\* family
 **NET40-NET45**:
@@ -141,7 +141,7 @@ var payload = new Dictionary<string, object>()
 
 var privateKey=new X509Certificate2("my-key.p12", "password", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet).PrivateKey as RSACryptoServiceProvider;
 
-string token=Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.RS256);
+string token=JWT.Encode(payload, privateKey, JwsAlgorithm.RS256);
 ```
 
 **NETCORE**:
@@ -156,7 +156,7 @@ var payload = new Dictionary<string, object>()
 
 var privateKey=new X509Certificate2("my-key.p12", "password").GetRSAPrivateKey();
 
-string token=Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.RS256);
+string token=JWT.Encode(payload, privateKey, JwsAlgorithm.RS256);
 ```
 **NET461**:
 Accepts `RSACryptoServiceProvider`, `RSA` or `CngKey` types of keys. 
@@ -180,7 +180,7 @@ byte[] d = { 42, 148, 231, 48, 225, 196, 166, 201, 23, 190, 229, 199, 20, 39, 22
 
 var privateKey=EccKey.New(x, y, d);
 
-string token=Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
+string token=JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
 ```
 
 **NETCORE**:
@@ -195,7 +195,7 @@ var payload = new Dictionary<string, object>()
 
 var privateKey=new X509Certificate2("ecc-key.p12", "password").GetECDsaPrivateKey();
 
-string token=Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
+string token=JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
 ```
 **NET461**:
 Accepts `CngKey` and `ECDsa` types of keys. 
@@ -217,7 +217,7 @@ var payload = new Dictionary<string, object>()
 
 var publicKey=new X509Certificate2("my-key.p12", "password").PublicKey.Key as RSACryptoServiceProvider;
 
-string token = Jose.JWT.Encode(payload, publicKey, JweAlgorithm.RSA_OAEP, JweEncryption.A256GCM);
+string token = JWT.Encode(payload, publicKey, JweAlgorithm.RSA_OAEP, JweEncryption.A256GCM);
 ```
 
 **NETCORE:**
@@ -232,7 +232,7 @@ var payload = new Dictionary<string, object>()
 
 var publicKey=new X509Certificate2("my-key.p12", "password").GetRSAPublicKey();
 
-string token = Jose.JWT.Encode(payload, publicKey, JweAlgorithm.RSA_OAEP, JweEncryption.A256GCM);
+string token = JWT.Encode(payload, publicKey, JweAlgorithm.RSA_OAEP, JweEncryption.A256GCM);
 ```
 
 **NET461**:
@@ -251,7 +251,7 @@ var payload = new Dictionary<string, object>()
 
 var secretKey = new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string token = Jose.JWT.Encode(payload, secretKey, JweAlgorithm.DIR, JweEncryption.A128CBC_HS256);
+string token = JWT.Encode(payload, secretKey, JweAlgorithm.DIR, JweEncryption.A128CBC_HS256);
 ```
 
 #### AES Key Wrap key management family of algorithms
@@ -266,7 +266,7 @@ var payload = new Dictionary<string, object>()
 
 var secretKey = new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string token = Jose.JWT.Encode(payload, secretKey, JweAlgorithm.A256KW, JweEncryption.A256CBC_HS512);
+string token = JWT.Encode(payload, secretKey, JweAlgorithm.A256KW, JweEncryption.A256CBC_HS512);
 ```
 
 #### AES GCM Key Wrap key management family of algorithms
@@ -281,7 +281,7 @@ var payload = new Dictionary<string, object>()
 
 var secretKey = new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string token = Jose.JWT.Encode(payload, secretKey, JweAlgorithm.A256GCMKW, JweEncryption.A256CBC_HS512);
+string token = JWT.Encode(payload, secretKey, JweAlgorithm.A256GCMKW, JweEncryption.A256CBC_HS512);
 ```
 
 #### ECDH-ES and ECDH-ES with AES Key Wrap key management family of algorithms
@@ -300,7 +300,7 @@ byte[] y = { 131, 116, 8, 14, 22, 150, 18, 75, 24, 181, 159, 78, 90, 51, 71, 159
 
 var publicKey=EccKey.New(x, y, usage:CngKeyUsages.KeyAgreement);
 
-string token = Jose.JWT.Encode(payload, publicKey, JweAlgorithm.ECDH_ES, JweEncryption.A256GCM);
+string token = JWT.Encode(payload, publicKey, JweAlgorithm.ECDH_ES, JweEncryption.A256GCM);
 ```
 
 #### PBES2 using HMAC SHA with AES Key Wrap key management family of algorithms
@@ -313,7 +313,7 @@ var payload = new Dictionary<string, object>()
     { "exp", 1300819380 }
 };  	
 
-string token = Jose.JWT.Encode(payload, "top secret", JweAlgorithm.PBES2_HS256_A128KW, JweEncryption.A256CBC_HS512);
+string token = JWT.Encode(payload, "top secret", JweAlgorithm.PBES2_HS256_A128KW, JweEncryption.A256CBC_HS512);
 ```
 
 #### Optional compressing payload before encrypting
@@ -328,7 +328,7 @@ var payload = new Dictionary<string, object>()
 
 var publicKey=new X509Certificate2("my-key.p12", "password").PublicKey.Key as RSACryptoServiceProvider;
 
-string token = Jose.JWT.Encode(payload, publicKey, JweAlgorithm.RSA1_5, JweEncryption.A128CBC_HS256, JweCompression.DEF);
+string token = JWT.Encode(payload, publicKey, JweAlgorithm.RSA1_5, JweEncryption.A128CBC_HS256, JweCompression.DEF);
 ```
 
 ### Verifying and Decoding Tokens
@@ -341,7 +341,7 @@ string token = "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Fmz3PLVfv-ySl4IJ.LMZpXM
 
 byte[] secretKey=new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string json = Jose.JWT.Decode(token, secretKey);
+string json = JWT.Decode(token, secretKey);
 ```
 
 **RS256, RS384, RS512**, **PS256, PS384, PS512** signatures and **RSA-OAEP-256**, **RSA-OAEP, RSA1_5** key management algorithms expects
@@ -353,7 +353,7 @@ string token = "eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.bx_4TL7gh14I
 
 var privateKey=new X509Certificate2("my-key.p12", "password", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet).PrivateKey as RSACryptoServiceProvider;
 
-string json = Jose.JWT.Decode(token,privateKey);
+string json = JWT.Decode(token,privateKey);
 ```
 
 **NETCORE**: `RSA` as a key, public/private is asymmetric to encoding:
@@ -362,7 +362,7 @@ string token = "eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.bx_4TL7gh14I
 
 var privateKey=new X509Certificate2("my-key.p12", "password").GetRSAPrivateKey();
 
-string json = Jose.JWT.Decode(token,privateKey);
+string json = JWT.Decode(token,privateKey);
 ```
 **NET461**: `RSACryptoServiceProvider`, `RSA` or `CngKey` types of keys, public/private is asymmetric to encoding.
 
@@ -381,7 +381,7 @@ byte[] y = { 131, 116, 8, 14, 22, 150, 18, 75, 24, 181, 159, 78, 90, 51, 71, 159
 
 var publicKey=EccKey.New(x, y);
 
-string json = Jose.JWT.Decode(token,publicKey);
+string json = JWT.Decode(token,publicKey);
 ```
 
 **NETCORE**: can accept either `CngKey` (see above) or `ECDsa` as a key, public/private is asymmetric to encoding.
@@ -395,7 +395,7 @@ var payload = new Dictionary<string, object>()
 
 var publicKey=new X509Certificate2("ecc-key.p12", "password").GetECDsaPublicKey();
 
-string token=Jose.JWT.Encode(payload, publicKey, JwsAlgorithm.ES256);
+string token=JWT.Encode(payload, publicKey, JwsAlgorithm.ES256);
 ```
 
 **NET461**: accepts `CngKey` and `ECDsa` types of keys, public/private is asymmetric to encoding.
@@ -413,7 +413,7 @@ byte[] d = { 42, 148, 231, 48, 225, 196, 166, 201, 23, 190, 229, 199, 20, 39, 22
 
 var privateKey=EccKey.New(x, y, d, CngKeyUsages.KeyAgreement);
 
-string json = Jose.JWT.Decode(token, privateKey);
+string json = JWT.Decode(token, privateKey);
 
 ```
 
@@ -423,7 +423,7 @@ string json = Jose.JWT.Decode(token, privateKey);
 ```C#
 string token = "eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwicDJjIjo4MTkyLCJwMnMiOiJiMFlFVmxMemtaNW9UUjBMIn0.dhPAhJ9kmaEbP-02VtEoPOF2QSEYM5085V6zYt1U1qIlVNRcHTGDgQ.4QAAq0dVQT41dQKDG7dhRA.H9MgJmesbU1ow6GCa0lEMwv8A_sHvgaWKkaMcdoj_z6O8LaMSgquxA-G85R_5hEILnHUnFllNJ48oJY7VmAJw0BQW73dMnn58u161S6Ftq7Mjxxq7bcksWvFTVtG5RsqqYSol5BZz5xm8Fcj-y5BMYMvrsCyQhYdeGEHkAvwzRdvZ8pGMsU2XPzl6GqxGjjuRh2vApAeNrj6MwKuD-k6AR0MH46EiNkVCmMkd2w8CNAXjJe9z97zky93xbxlOLozaC3NBRO2Q4bmdGdRg5y4Ew.xNqRi0ouQd7uo5UrPraedg";
 
-string json = Jose.JWT.Decode(token, "top secret");
+string json = JWT.Decode(token, "top secret");
 ```
 
 ### Potential security risk
@@ -466,13 +466,13 @@ Encoding can be controlled with optional `JwtOptions` parameter, that support:
 Options can be mixed in any combinations. To match RFC 7797:
 
 ```C#
-string token = Jose.JWT.Encode(json, secretKey, JwsAlgorithm.HS256, options: new JwtOptions { DetachPayload = true, EncodePayload = false});
+string token = JWT.Encode(json, secretKey, JwsAlgorithm.HS256, options: new JwtOptions { DetachPayload = true, EncodePayload = false});
 ```
 
 or just skip payload for instance:
 
 ```C#
-string token = Jose.JWT.Encode(json, secretKey, JwsAlgorithm.HS256, options: new JwtOptions { DetachPayload = true });
+string token = JWT.Encode(json, secretKey, JwsAlgorithm.HS256, options: new JwtOptions { DetachPayload = true });
 ```
 
 Decoding automatically respect `b64` header if present. In case of detached payload one can provide optional `payload` param:
@@ -481,7 +481,7 @@ Decoding automatically respect `b64` header if present. In case of detached payl
 string token = "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJSUzI1NiJ9..iyormYw6b0zKjx4K-fpeZO8xrLghkeUFMb2l4alz03CRLVdlXkdeKVG7N5lBbS-kXB4-8hH1ELFA5fUJzN2QYR6ZZIWjDF77HYTw7lsyjTJDNABjBFn-BIXlWatjNdgtRi2BZg2q_Wos87ZQT6Sl-h5hvxsFEsR0kGPMQ4Fjp-sxOyfnls8jAlziqmkpN-K6I3tK2vCLCQgnaN9sYrsIcrzuEA30YeXsgUe3m44yxLCXczXWKE3kgGiZ0MRpVvKOZt4B2DZLcRmNArhxjhWWd1nKZvv8c7kN0TqOjcNEUGWzwDs4ikCSz1aYKaLPXgjzpKnzbajUM117F3aCAaWH9g";
 
 // will echo provided payload back as return value, for consistency
-string json = Jose.JWT.Decode(token, PubKey(), payload: @"{""hello"": ""world""}");
+string json = JWT.Decode(token, PubKey(), payload: @"{""hello"": ""world""}");
 ```
 
 also works with binary payloads:
@@ -490,7 +490,7 @@ also works with binary payloads:
 string token = "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJSUzI1NiJ9..ToCewDcERVLuqImwDkOd9iSxvTC8vzh-HrhuohOIjWMrGpTZi2FdzVN4Ll3fb2Iz3s_hj-Lno_c6m_7VcmOHfRLC9sPjSu2q9dbNkKo8Zc2FQmsCBdQi06XGAEJZW2M9380pxoYKiJ51a4EbGl4Ag7lX3hXeTPYRMVifacgdlpg2SYZzDPZQbWvibgtXFsBsIqPd-8i6ucE2eMdaNeWMLsHv-b5s7uWn8hN2nMKHj000Qce5rSbpK58l2LNeWw4IR6wNOqSZfbeerMxq1u0p-ZKIQxP24MltaPjZtqMdD4AzjrP4UCEf7VaLSkSuNVSf6ZmLmE_OYgQuQe7adFdoPg";
 
 // will echo provided payload back as return value, for consistency
-byte[] payload = Jose.JWT.DecodeBytes(token, PubKey(), payload: BinaryPayload);
+byte[] payload = JWT.DecodeBytes(token, PubKey(), payload: BinaryPayload);
 ```
 
 
@@ -514,7 +514,7 @@ var headers = new Dictionary<string, object>()
 
 var secretKey = new byte[]{164,60,194,0,161,189,41,38,130,89,141,164,45,170,159,209,69,137,243,216,191,131,47,250,32,107,231,117,37,158,225,234};
 
-string token = Jose.JWT.Encode(payload, secretKey, JweAlgorithm.A256GCMKW, JweEncryption.A256CBC_HS512, extraHeaders: headers);
+string token = JWT.Encode(payload, secretKey, JweAlgorithm.A256GCMKW, JweEncryption.A256CBC_HS512, extraHeaders: headers);
 ```
 
 ```C#
@@ -533,7 +533,7 @@ var headers = new Dictionary<string, object>()
 
 var privateKey=new X509Certificate2("my-key.p12", "password", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet).PrivateKey as RSACryptoServiceProvider;
 
-string token=Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: headers);
+string token=JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: headers);
 ```
 
 \* For backwards compatibility signing uses pre-configured `typ: 'JWT'` header by default.
@@ -544,10 +544,10 @@ do logging or other things.
 
 jose-jwt provides helper methods to examine token content without performing actual integrity validation or decryption.
 
-`IDictionary<string, object> Jose.JWT.Headers(String token)` to return header information as dictionary and `T Jose.JWT.Headers<T>(string token)` to return headers information as
+`IDictionary<string, object> JWT.Headers(String token)` to return header information as dictionary and `T JWT.Headers<T>(string token)` to return headers information as
 unmarshalled type.
 
-`string Jose.JWT.Payload(string token)` to return unparsed payload and `T Jose.JWT.Payload<T>(string token)` to return unmarshalled payload type. Those 2 methods works only with
+`string JWT.Payload(string token)` to return unparsed payload and `T JWT.Payload<T>(string token)` to return unmarshalled payload type. Those 2 methods works only with
 signed tokens and will throw `JoseException` when applied on encrypted token.
 
 **Security warning: please note, you should NOT rely on infromation extracted by given helpers without performing token validation as second step.**
@@ -555,24 +555,24 @@ signed tokens and will throw `JoseException` when applied on encrypted token.
 Below are couple examples on how two-phase validation can be implemented with jose-jwt:
 ```C#
 //step 1a: get headers info
-var headers = Jose.JWT.Headers(token);
+var headers = JWT.Headers(token);
 
 //step 1b: lookup validation key based on header info
 var key = FindKey(headers["keyid"]);
 
 //step 2: perform actual token validation
-var payload = Jose.JWT.Decode(token, key);
+var payload = JWT.Decode(token, key);
 ```
 
 ```C#
 //step 1a: get payload as custom JwtToken object
-var jwt = Jose.JWT.Payload<JwtToken>(token);
+var jwt = JWT.Payload<JwtToken>(token);
 
 //step 1b: lookup validation key based on issuer
 var key = FindKeyByIssuer(jwt.Iss);
 
 //step 2: perform actual token validation
-var payload = Jose.JWT.Decode<JwtToken>(token, key);
+var payload = JWT.Decode<JwtToken>(token, key);
 ```
 
 ```C#
@@ -581,7 +581,7 @@ var payload = Jose.JWT.Decode<JwtToken>(token, key);
 Dictionary<string, ServiceStack.Text.JsonObject> keys = GetKeysFromIdp();
 
 // step 1a: get headers info
-var headers = Jose.JWT.Headers(token);
+var headers = JWT.Headers(token);
 
 // step 1b: lookup validation key based on header info
 var jwk = keys[headers["keyid"]];
@@ -595,7 +595,7 @@ key.ImportParameters(new RSAParameters
 });
 
 // step 2: perform actual token validation
-var paylod = Jose.JWT.Decode(token, key);
+var paylod = JWT.Decode(token, key);
 ```
 
 ### Strict validation
@@ -607,7 +607,7 @@ string token = "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Fmz3PLVfv-ySl4IJ.LMZpXM
 
 byte[] secretKey = new byte[] { 164, 60, 194, 0, 161, 189, 41, 38, 130, 89, 141, 164, 45, 170, 159, 209, 69, 137, 243, 216, 191, 131, 47, 250, 32, 107, 231, 117, 37, 158, 225, 234 };
 
-string json = Jose.JWT.Decode(token, secretKey, JweAlgorithm.DIR, JweEncryption.A256GCM);
+string json = JWT.Decode(token, secretKey, JweAlgorithm.DIR, JweEncryption.A256GCM);
 ```
 
 Example of how to strictly validate a signed token:
@@ -619,7 +619,7 @@ byte[] y = { 131, 116, 8, 14, 22, 150, 18, 75, 24, 181, 159, 78, 90, 51, 71, 159
 
 var publicKey = EccKey.New(x, y);
 
-string json = Jose.JWT.Decode(token, publicKey, JwsAlgorithm.ES256);
+string json = JWT.Decode(token, publicKey, JwsAlgorithm.ES256);
 ```
 
 ### Working with binary payload
@@ -632,22 +632,22 @@ var payload = new byte[] { 1, 2, 3, 0, 255 };
 var signingKey = Convert.FromBase64String("WbQs8GowdRX1zYCFi3/VuQ==");
 
 // Encoding a token with a binary payload.
-var token = Jose.JWT.EncodeBytes(payload, signingKey, Jose.JwsAlgorithm.HS256);
+var token = JWT.EncodeBytes(payload, signingKey, Jose.JwsAlgorithm.HS256);
 
 // Reading the binary payload from a token (with signature verification).
-var decoded = Jose.JWT.DecodeBytes(token, signingKey);
+var decoded = JWT.DecodeBytes(token, signingKey);
 
 // Reading the binary payload from a token (without signature verification).
-decoded = Jose.JWT.PayloadBytes(token);
+decoded = JWT.PayloadBytes(token);
 ```
 
 ### Parsing and mapping json to object model directly
 jose-jwt library is agnostic about object model used to represent json payload as well as underlying framework used to serialize/parse json objects. Library provides convinient generic methods to work directly with your object model:
 
 ```C#
-MyDomainObject obj=Jose.JWT.Decode<MyDomainObject>(token,secretKey); //will invoke configured IJsonMapper to perform parsing/mapping of content to MyDomainObject
+MyDomainObject obj=JWT.Decode<MyDomainObject>(token,secretKey); //will invoke configured IJsonMapper to perform parsing/mapping of content to MyDomainObject
 
-string data=Jose.JWT.Encode(obj,secrectKey,JwsAlgorithm.HS256); //for object argument configured IJsonMapper will be invoked to serialize object to json string before encoding
+string data=JWT.Encode(obj,secrectKey,JwsAlgorithm.HS256); //for object argument configured IJsonMapper will be invoked to serialize object to json string before encoding
 ```
 
 ## Settings
@@ -669,17 +669,17 @@ as well as specify aliases when decoding tokens from 3rd party libraries that do
 
 ```C#
 // global setting
-Jose.JWT.DefaultSettings.JsonMapper = new Jose.NewtonsoftMapper();
+JWT.DefaultSettings.JsonMapper = new Jose.NewtonsoftMapper();
 
 
-Jose.JWTSettings settings = new Jose.JwtSettings();
+JWTSettings settings = new JWTSettings();
 settings.JsonMapper = new Jose.JSSerializerMapper(); 
 
 // override global settings for this call
-Jose.JWT.Decode(token, secretKey, settings: settings);
+JWT.Decode(token, secretKey, settings: settings);
 
 //or simply
-Jose.JWT.Decode(token, secretKey, settings: new JwtSettings().RegisterMapper(new Jose.JSSerializerMapper()));
+JWT.Decode(token, secretKey, settings: new JwtSettings().RegisterMapper(new Jose.JSSerializerMapper()));
 ```
 
 ### Customizing json <-> object parsing & mapping
@@ -716,7 +716,7 @@ public class NewtonsoftMapper : IJsonMapper
     }
 }
 
-Jose.JWT.DefaultSettings.JsonMapper = new NewtonsoftMapper();
+JWT.DefaultSettings.JsonMapper = new NewtonsoftMapper();
 ```
 
 #### Example of ServiceStack mapper
@@ -734,7 +734,7 @@ public class ServiceStackMapper : IJsonMapper
     }
 }
 
-Jose.JWT.DefaultSettings.JsonMapper = new ServiceStackMapper();
+JWT.DefaultSettings.JsonMapper = new ServiceStackMapper();
 ```
 
 ### Customizing algorithm implementations
@@ -758,7 +758,7 @@ public class CustomKeyManagement : IKeyManagement
 ...
 
 // set default RSA-OAEP key management to use custom implementation
-Jose.JWT.DefaultSettings.RegisterJwa(JweAlgorithm.RSA_OAEP, new CustomKeyManagement());
+JWT.DefaultSettings.RegisterJwa(JweAlgorithm.RSA_OAEP, new CustomKeyManagement());
 ```
 
 ### Providing aliases
@@ -767,13 +767,13 @@ dealing with tokens produced from 3rd party library which you have no control ov
 of `RSA-OAEP-256` it is possible to register alias:
 
 ```C#
-   Jose.JWT.Decode(token, key, settings: new JwtSettings().RegisterJwaAlias("RSA_OAEP_256", JweAlgorithm.RSA_OAEP_256));
+   JWT.Decode(token, key, settings: new JwtSettings().RegisterJwaAlias("RSA_OAEP_256", JweAlgorithm.RSA_OAEP_256));
 ```
 
 Multiple calls can be chained for more convinience:
 
 ```C#
-Jose.JWT.Decode(token, secretKey, settings: new JwtSettings()
+JWT.Decode(token, secretKey, settings: new JwtSettings()
 						.RegisterMapper(customMapper)
 						.RegisterJws(JwsAlgorithm.RS256, amazonKmsImpl)
 						.RegisterJws(JwsAlgorithm.RS384, amazonKmsImpl)
@@ -847,7 +847,7 @@ Usually people have success with https://github.com/brutaldev/StrongNameSigner
 
 ### Securing Controllers Using AuthorizeAttribute
 
-ASP.NET Team provides [Microsoft.AspNetCore.Authentication.JwtBearer](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer/) that can be used to authorize web service routes using JWT Tokens created using JOSE-JWT that are passed via `Authorize: Bearer` HTTP header.
+ASP.NET Team provides [Microsoft.AspNetCore.Authentication.JwtBearer](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer/) that can be used to authorize web service routes using JWT Tokens created using Blockcore.Jose-JWT that are passed via `Authorize: Bearer` HTTP header.
 
 In `startup.cs`, you can add JWT Authorization middleware by using `UseJwtBearerAuthentication` extension method against the `IApplicationBuilder app` parameter in `void Configure` method.
 
@@ -996,7 +996,7 @@ public class TokenApiController : Controller
             return BadRequest("Invalid username or password!");
         }
 
-        // As an example, AuthService.CreateToken can return Jose.JWT.Encode(claims, YourTokenSecretKey, Jose.JwsAlgorithm.HS256);
+        // As an example, AuthService.CreateToken can return JWT.Encode(claims, YourTokenSecretKey, Jose.JwsAlgorithm.HS256);
         var token = AuthService.CreateToken(claims);
         return Ok(token);
     }

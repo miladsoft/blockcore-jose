@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class HmacUsingSha : IJwsAlgorithm
     {

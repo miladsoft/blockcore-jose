@@ -1,10 +1,10 @@
-using Jose.jwe;
+using Blockcore.Jose.jwe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public enum JwsAlgorithm
     {
@@ -148,7 +148,7 @@ namespace Jose
             if (parts.Count > 3)
             {
                 throw new JoseException(
-                    "Getting payload for encrypted tokens is not supported. Please use Jose.JWT.Decode() method instead.");
+                    "Getting payload for encrypted tokens is not supported. Please use JWT.Decode() method instead.");
             }
 
             parts.Next(false); //skip header

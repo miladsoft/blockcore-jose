@@ -1,6 +1,6 @@
 using System;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public static class Base64Url
     {

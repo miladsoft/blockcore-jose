@@ -1,7 +1,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Jose
+namespace Blockcore.Jose
 {
     public class DeflateCompression : ICompression
     {

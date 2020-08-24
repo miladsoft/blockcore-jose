@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Jose.native
+namespace Blockcore.Jose.native
 {
     public static class NCrypt
     {
