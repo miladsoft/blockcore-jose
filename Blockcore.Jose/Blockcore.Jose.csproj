@@ -5,12 +5,18 @@
     <AssemblyTitle>Blockcore.Jose</AssemblyTitle>
     <AssemblyName>Blockcore.Jose</AssemblyName>
     <ProjectGuid>{B93E021F-85EB-4914-9CB8-CCB9DE03C991}</ProjectGuid>
+
+    <PackageId>Blockcore.Jose</PackageId>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Authors>Blockcore</Authors>
+    <IsPackable>true</IsPackable>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;NET461</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
     <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
     <PackageReference Include="Blockcore.NBitcoin" Version="1.0.*" />
   </ItemGroup>

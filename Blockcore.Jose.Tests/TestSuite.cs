@@ -237,7 +237,6 @@ namespace UnitTests
          Assert.Equal(json, @"{""hello"": ""world""}");
       }
 
-
       [Fact]
       public void DecodeES256K()
       {
@@ -252,7 +251,6 @@ namespace UnitTests
          //then
          Assert.Equal(json, @"{""hello"": ""world""}");
       }
-
 
       [Fact]
       public void DecodeES256_ECDsaKey()
