@@ -5,8 +5,11 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Blockcore;
+using Blockcore.Features.Storage.Models;
 using Blockcore.Jose;
+using Blockcore.Jose.Tests.Networks;
 using NBitcoin;
+using Newtonsoft.Json;
 using Security.Cryptography;
 using Xunit;
 using Xunit.Abstractions;
@@ -689,6 +692,49 @@ namespace UnitTests
          Assert.Equal("H8heldZXpbC3AwzCCx3bz5xbfvO9i8CoWf6vtiWZzrUvCjlMfGkJS9aGhtWl3ZyDDnl5GCOBcwKNm0L4AVtwQKA", parts[2]);
 
          Assert.Equal(JWT.Decode(token, ECDSa256KPublic()), json);
+      }
+
+      public static long ToUnixEpochDate(DateTime date) => new DateTimeOffset(date).ToUniversalTime().ToUnixTimeSeconds();
+
+      [Fact]
+      public void EncodeES256K_ExtraHeaders()
+      {
+         //given data
+         string json = @"{""hello"": ""world""}";
+
+         ExtKey extKey = ECDSa256KPrivateExtKey();
+         BitcoinPubKeyAddress identity0Address = extKey.PrivateKey.PubKey.GetAddress(ProfileNetwork.Instance);
+         string identifier = "did:is:" + identity0Address.ToString();
+
+         var identity = new Identity
+         {
+            Identifier = identifier,
+            Name = "John Doe",
+            ShortName = "John",
+            Alias = "JD",
+            Title = "Gone missing",
+            Type = "identity",
+            Timpestamp = ToUnixEpochDate(new DateTime(2020, 2, 2))
+         };
+
+         var header = new Dictionary<string, object>();
+         header.Add("typ", "JWT");
+         header.Add("kid", identifier);
+
+         //when
+         string token = JWT.Encode(identity, extKey.PrivateKey, JwsAlgorithm.ES256K, header);
+
+         //then
+         Console.Out.WriteLine("ES256K (ECDsa key) = {0}", token);
+
+         string[] parts = token.Split('.');
+
+         Assert.Equal(3, parts.Length);
+         Assert.Equal("eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJraWQiOiJkaWQ6aXM6UEI3aXpwYWduZFRKazlSNENBd2JCQ1RuN2tkWDRTR2p1UCJ9", parts[0]);
+         Assert.Equal("eyJuYW1lIjoiSm9obiBEb2UiLCJzaG9ydG5hbWUiOiJKb2huIiwiYWxpYXMiOiJKRCIsInRpdGxlIjoiR29uZSBtaXNzaW5nIiwiZW1haWwiOm51bGwsInVybCI6bnVsbCwiaW1hZ2UiOm51bGwsImh1YnMiOm51bGwsImlkZW50aWZpZXIiOiJkaWQ6aXM6UEI3aXpwYWduZFRKazlSNENBd2JCQ1RuN2tkWDRTR2p1UCIsIkB0eXBlIjoiaWRlbnRpdHkiLCJAc3RhdGUiOjAsImlhdCI6MTU4MDU5ODAwMH0", parts[1]);
+         Assert.Equal("H53s7rMciXAExjWgyteXM4Ldz92DZN1enNv4ymZBTfTYWOyLd-_6-FbM4wZ7ZV187mPF_q4CQadgcj7LtlG97tE", parts[2]);
+
+         Assert.Equal(JWT.Decode(token, ECDSa256KPublic()), JsonConvert.SerializeObject(identity));
       }
 
 
@@ -2929,14 +2975,19 @@ namespace UnitTests
          return ECDSa256KPrivate().PubKey;
       }
 
-      private Key ECDSa256KPrivate()
+      private ExtKey ECDSa256KPrivateExtKey()
       {
          var mnemonic = new Mnemonic("assume practice trash rescue oblige boost sponsor south civil lawsuit caught draft");
          ExtKey masterNode = mnemonic.DeriveExtKey();
          ExtKey identityRoot = masterNode.Derive(new KeyPath("m/302'"));
          ExtKey identity0 = identityRoot.Derive(0, true);
 
-         return identity0.PrivateKey;
+         return identity0;
+      }
+
+      private Key ECDSa256KPrivate()
+      {
+         return ECDSa256KPrivateExtKey().PrivateKey;
       }
 
       private ECDsa ECDSa256Public()

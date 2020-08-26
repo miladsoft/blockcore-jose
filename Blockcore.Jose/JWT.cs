@@ -65,7 +65,7 @@ namespace Blockcore.Jose
    /// </summary>
    public static class JWT
    {
-      private static JwtSettings defaultSettings;
+      private static readonly JwtSettings defaultSettings;
 
       /// <summary>
       /// Global default settings for JWT.
