@@ -359,9 +359,9 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static string Decode(string token, object key, JweAlgorithm alg, JweEncryption enc, JwtSettings settings = null)
+      public static string Decode(string token, object key, JweAlgorithm alg, JweEncryption enc, JwtSettings settings = null, bool requireSignature = false)
       {
-         return Decode(token, key, null, alg, enc, settings);
+         return Decode(token, key, null, alg, enc, settings, null, requireSignature);
       }
 
       /// <summary>
@@ -377,9 +377,9 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static byte[] DecodeBytes(string token, object key, JweAlgorithm alg, JweEncryption enc, JwtSettings settings = null)
+      public static byte[] DecodeBytes(string token, object key, JweAlgorithm alg, JweEncryption enc, JwtSettings settings = null, bool requireSignature = false)
       {
-         return DecodeBytes(token, key, null, alg, enc, settings);
+         return DecodeBytes(token, key, null, alg, enc, settings, null, requireSignature);
       }
 
       /// <summary>
@@ -395,9 +395,9 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static string Decode(string token, object key, JwsAlgorithm alg, JwtSettings settings = null, string payload = null)
+      public static string Decode(string token, object key, JwsAlgorithm alg, JwtSettings settings = null, string payload = null, bool requireSignature = false)
       {
-         return Decode(token, key, alg, null, null, settings, payload);
+         return Decode(token, key, alg, null, null, settings, payload, requireSignature);
       }
 
       /// <summary>
@@ -413,9 +413,9 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static byte[] DecodeBytes(string token, object key, JwsAlgorithm alg, JwtSettings settings = null, byte[] payload = null)
+      public static byte[] DecodeBytes(string token, object key, JwsAlgorithm alg, JwtSettings settings = null, byte[] payload = null, bool requireSignature = false)
       {
-         return DecodeBytes(token, key, alg, null, null, settings, payload);
+         return DecodeBytes(token, key, alg, null, null, settings, payload, requireSignature);
       }
 
       /// <summary>
@@ -430,9 +430,9 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static string Decode(string token, object key = null, JwtSettings settings = null, string payload = null)
+      public static string Decode(string token, object key = null, JwtSettings settings = null, string payload = null, bool requireSignature = false)
       {
-         return Decode(token, key, null, null, null, settings, payload);
+         return Decode(token, key, null, null, null, settings, payload, requireSignature);
       }
 
       /// <summary>
@@ -484,7 +484,7 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static T Decode<T>(string token, object key, JwsAlgorithm alg, JwtSettings settings = null)
+      public static T Decode<T>(string token, object key, JwsAlgorithm alg, JwtSettings settings = null, bool requireSignature = false)
       {
          return GetSettings(settings).JsonMapper.Parse<T>(Decode(token, key, alg, settings));
       }
@@ -501,12 +501,12 @@ namespace Blockcore.Jose
       /// <exception cref="IntegrityException">if signature validation failed</exception>
       /// <exception cref="EncryptionException">if JWT token can't be decrypted</exception>
       /// <exception cref="InvalidAlgorithmException">if JWT signature, encryption or compression algorithm is not supported</exception>
-      public static T Decode<T>(string token, object key = null, JwtSettings settings = null)
+      public static T Decode<T>(string token, object key = null, JwtSettings settings = null, bool requireSignature = false)
       {
-         return GetSettings(settings).JsonMapper.Parse<T>(Decode(token, key, settings));
+         return GetSettings(settings).JsonMapper.Parse<T>(Decode(token, key, settings, null, requireSignature));
       }
 
-      private static byte[] DecodeBytes(string token, object key = null, JwsAlgorithm? expectedJwsAlg = null, JweAlgorithm? expectedJweAlg = null, JweEncryption? expectedJweEnc = null, JwtSettings settings = null, byte[] payload = null)
+      private static byte[] DecodeBytes(string token, object key = null, JwsAlgorithm? expectedJwsAlg = null, JweAlgorithm? expectedJweAlg = null, JweEncryption? expectedJweEnc = null, JwtSettings settings = null, byte[] payload = null, bool requireSignature = false)
       {
          Ensure.IsNotEmpty(token, "Incoming token expected to be in compact serialization form, not empty, whitespace or null.");
 
@@ -534,16 +534,19 @@ namespace Blockcore.Jose
 
             byte[] contentPayload = parts.Next(b64);
             byte[] signature = parts.Next();
-
             byte[] effectivePayload = payload ?? contentPayload;
+
+            if (requireSignature && signature.Length == 0)
+            {
+               throw new JoseException("Payload is missing required signature");
+            }
 
             string algorithm = (string)headerData["alg"];
             JwsAlgorithm jwsAlgorithm = jwtSettings.JwsAlgorithmFromHeader(algorithm);
 
             if (expectedJwsAlg != null && expectedJwsAlg != jwsAlgorithm)
             {
-               throw new InvalidAlgorithmException(
-                   "The algorithm type passed to the Decode method did not match the algorithm type in the header.");
+               throw new InvalidAlgorithmException("The algorithm type passed to the Decode method did not match the algorithm type in the header.");
             }
 
             IJwsAlgorithm jwsAlgorithmImpl = jwtSettings.Jws(jwsAlgorithm);
@@ -554,7 +557,7 @@ namespace Blockcore.Jose
             }
 
             // If the key has not been specified, attempt to read it from the header.
-            if (key == null && headerData.ContainsKey("kid"))
+            if (key == null && headerData.ContainsKey("kid") && jwsAlgorithm != JwsAlgorithm.none)
             {
                if (jwsAlgorithm == JwsAlgorithm.ES256K)
                {
@@ -575,11 +578,11 @@ namespace Blockcore.Jose
          }
       }
 
-      private static string Decode(string token, object key = null, JwsAlgorithm? jwsAlg = null, JweAlgorithm? jweAlg = null, JweEncryption? jweEnc = null, JwtSettings settings = null, string payload = null)
+      private static string Decode(string token, object key = null, JwsAlgorithm? jwsAlg = null, JweAlgorithm? jweAlg = null, JweEncryption? jweEnc = null, JwtSettings settings = null, string payload = null, bool requireSignature = false)
       {
          byte[] detached = payload != null ? Encoding.UTF8.GetBytes(payload) : null;
 
-         byte[] payloadBytes = DecodeBytes(token, key, jwsAlg, jweAlg, jweEnc, settings, detached);
+         byte[] payloadBytes = DecodeBytes(token, key, jwsAlg, jweAlg, jweEnc, settings, detached, requireSignature);
 
          return Encoding.UTF8.GetString(payloadBytes);
       }
