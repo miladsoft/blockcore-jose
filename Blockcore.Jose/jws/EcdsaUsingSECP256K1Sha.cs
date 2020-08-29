@@ -46,6 +46,15 @@ namespace Blockcore.Jose
                return publicKey.Hash == valid.Hash;
             }
 
+            if (key is BitcoinPubKeyAddress publicKeyAddress)
+            {
+               uint256 hash = Hashes.Hash256(securedInput);
+
+               var valid = PubKey.RecoverCompact(hash, signature);
+
+               return publicKeyAddress.Hash == valid.Hash;
+            }
+
             throw new ArgumentException("EcdsaUsingSECP256K1Sha algorithm expects key to be of either PubKey type.");
          }
          catch (CryptographicException e)

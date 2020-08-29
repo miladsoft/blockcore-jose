@@ -1,6 +1,7 @@
 using Blockcore.Jose.jwe;
 using System.Collections.Generic;
 using System;
+using NBitcoin;
 
 namespace Blockcore.Jose
 {
@@ -10,7 +11,7 @@ namespace Blockcore.Jose
    /// </summary>
    public class JwtSettings
    {
-      private Dictionary<JwsAlgorithm, IJwsAlgorithm> jwsAlgorithms = new Dictionary<JwsAlgorithm, IJwsAlgorithm>
+      private readonly Dictionary<JwsAlgorithm, IJwsAlgorithm> jwsAlgorithms = new Dictionary<JwsAlgorithm, IJwsAlgorithm>
             {
                 { JwsAlgorithm.none, new Plaintext()},
                 { JwsAlgorithm.HS256, new HmacUsingSha("SHA256") },
@@ -36,7 +37,7 @@ namespace Blockcore.Jose
 #endif
             };
 
-      private Dictionary<JwsAlgorithm, string> jwsAlgorithmsHeaderValue = new Dictionary<JwsAlgorithm, string>
+      private readonly Dictionary<JwsAlgorithm, string> jwsAlgorithmsHeaderValue = new Dictionary<JwsAlgorithm, string>
             {
                 { JwsAlgorithm.none, "none" },
                 { JwsAlgorithm.HS256, "HS256" },
@@ -54,9 +55,9 @@ namespace Blockcore.Jose
                 { JwsAlgorithm.PS512, "PS512" }
             };
 
-      private Dictionary<string, JwsAlgorithm> jwsAlgorithmsAliases = new Dictionary<string, JwsAlgorithm>();
+      private readonly Dictionary<string, JwsAlgorithm> jwsAlgorithmsAliases = new Dictionary<string, JwsAlgorithm>();
 
-      private Dictionary<JweEncryption, IJweAlgorithm> encAlgorithms = new Dictionary<JweEncryption, IJweAlgorithm>
+      private readonly Dictionary<JweEncryption, IJweAlgorithm> encAlgorithms = new Dictionary<JweEncryption, IJweAlgorithm>
             {
                 { JweEncryption.A128CBC_HS256, new AesCbcHmacEncryption(new HmacUsingSha("SHA256"), 256) },
                 { JweEncryption.A192CBC_HS384, new AesCbcHmacEncryption(new HmacUsingSha("SHA384"), 384) },
@@ -67,7 +68,7 @@ namespace Blockcore.Jose
                 { JweEncryption.A256GCM, new AesGcmEncryption(256) }
             };
 
-      private Dictionary<JweEncryption, string> encAlgorithmsHeaderValue = new Dictionary<JweEncryption, string>
+      private readonly Dictionary<JweEncryption, string> encAlgorithmsHeaderValue = new Dictionary<JweEncryption, string>
             {
                 { JweEncryption.A128CBC_HS256, "A128CBC-HS256" },
                 { JweEncryption.A192CBC_HS384, "A192CBC-HS384" },
@@ -77,9 +78,9 @@ namespace Blockcore.Jose
                 { JweEncryption.A256GCM, "A256GCM" },
             };
 
-      private Dictionary<string, JweEncryption> encAlgorithmsAliases = new Dictionary<string, JweEncryption>();
+      private readonly Dictionary<string, JweEncryption> encAlgorithmsAliases = new Dictionary<string, JweEncryption>();
 
-      private Dictionary<JweAlgorithm, IKeyManagement> keyAlgorithms = new Dictionary<JweAlgorithm, IKeyManagement>
+      private readonly Dictionary<JweAlgorithm, IKeyManagement> keyAlgorithms = new Dictionary<JweAlgorithm, IKeyManagement>
             {
                 { JweAlgorithm.RSA_OAEP, new RsaKeyManagement(true) },
                 { JweAlgorithm.RSA_OAEP_256, new RsaOaep256KeyManagement() },
@@ -99,7 +100,7 @@ namespace Blockcore.Jose
                 { JweAlgorithm.A192GCMKW, new AesGcmKeyWrapManagement(192) },
                 { JweAlgorithm.A256GCMKW, new AesGcmKeyWrapManagement(256) }
             };
-      private Dictionary<JweAlgorithm, string> keyAlgorithmsHeaderValue = new Dictionary<JweAlgorithm, string>
+      private readonly Dictionary<JweAlgorithm, string> keyAlgorithmsHeaderValue = new Dictionary<JweAlgorithm, string>
             {
                 { JweAlgorithm.RSA1_5, "RSA1_5" },
                 { JweAlgorithm.RSA_OAEP, "RSA-OAEP" },
@@ -120,19 +121,19 @@ namespace Blockcore.Jose
                 { JweAlgorithm.A256GCMKW, "A256GCMKW" },
             };
 
-      private Dictionary<string, JweAlgorithm> keyAlgorithmsAliases = new Dictionary<string, JweAlgorithm>();
+      private readonly Dictionary<string, JweAlgorithm> keyAlgorithmsAliases = new Dictionary<string, JweAlgorithm>();
 
-      private Dictionary<JweCompression, ICompression> compressionAlgorithms = new Dictionary<JweCompression, ICompression>
+      private readonly Dictionary<JweCompression, ICompression> compressionAlgorithms = new Dictionary<JweCompression, ICompression>
         {
             { JweCompression.DEF, new DeflateCompression() }
         };
 
-      private Dictionary<JweCompression, string> jweCompressionHeaderValue = new Dictionary<JweCompression, string>
+      private readonly Dictionary<JweCompression, string> jweCompressionHeaderValue = new Dictionary<JweCompression, string>
         {
             { JweCompression.DEF, "DEF" }
         };
 
-      private Dictionary<string, JweCompression> compressionAlgorithmsAliases = new Dictionary<string, JweCompression>();
+      private readonly Dictionary<string, JweCompression> compressionAlgorithmsAliases = new Dictionary<string, JweCompression>();
 
       private IJsonMapper jsMapper = new NewtonsoftMapper();
 
@@ -209,6 +210,11 @@ namespace Blockcore.Jose
          return this;
       }
 
+      /// <summary>
+      /// Defines the network settings used to decode the key in the header. Defaults to "ProfileNetwork".
+      /// </summary>
+      public Network Network { get; set; } = ProfileNetwork.Instance;
+
       //Properties
       public IJsonMapper JsonMapper
       {
@@ -219,8 +225,7 @@ namespace Blockcore.Jose
       //JWS signing algorithm
       public IJwsAlgorithm Jws(JwsAlgorithm alg)
       {
-         IJwsAlgorithm impl;
-         return jwsAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+         return jwsAlgorithms.TryGetValue(alg, out IJwsAlgorithm impl) ? impl : null;
       }
 
       public string JwsHeaderValue(JwsAlgorithm algorithm)
@@ -230,14 +235,13 @@ namespace Blockcore.Jose
 
       public JwsAlgorithm JwsAlgorithmFromHeader(string headerValue)
       {
-         foreach (var pair in jwsAlgorithmsHeaderValue)
+         foreach (KeyValuePair<JwsAlgorithm, string> pair in jwsAlgorithmsHeaderValue)
          {
             if (pair.Value.Equals(headerValue)) return pair.Key;
          }
 
          //try alias
-         JwsAlgorithm aliasMatch;
-         if (jwsAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         if (jwsAlgorithmsAliases.TryGetValue(headerValue, out JwsAlgorithm aliasMatch))
          {
             return aliasMatch;
          }
@@ -248,8 +252,7 @@ namespace Blockcore.Jose
       //JWE encryption algorithm
       public IJweAlgorithm Jwe(JweEncryption alg)
       {
-         IJweAlgorithm impl;
-         return encAlgorithms.TryGetValue(alg, out impl) ? impl : null; ;
+         return encAlgorithms.TryGetValue(alg, out IJweAlgorithm impl) ? impl : null; ;
       }
 
       public string JweHeaderValue(JweEncryption algorithm)
@@ -259,15 +262,13 @@ namespace Blockcore.Jose
 
       public JweEncryption JweAlgorithmFromHeader(string headerValue)
       {
-         foreach (var pair in encAlgorithmsHeaderValue)
+         foreach (KeyValuePair<JweEncryption, string> pair in encAlgorithmsHeaderValue)
          {
             if (pair.Value.Equals(headerValue)) return pair.Key;
          }
 
          //try alias
-         JweEncryption aliasMatch;
-
-         if (encAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         if (encAlgorithmsAliases.TryGetValue(headerValue, out JweEncryption aliasMatch))
          {
             return aliasMatch;
          }
@@ -277,8 +278,7 @@ namespace Blockcore.Jose
       //JWA algorithm
       public IKeyManagement Jwa(JweAlgorithm alg)
       {
-         IKeyManagement impl;
-         return keyAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+         return keyAlgorithms.TryGetValue(alg, out IKeyManagement impl) ? impl : null;
       }
 
       public string JwaHeaderValue(JweAlgorithm alg)
@@ -288,14 +288,13 @@ namespace Blockcore.Jose
 
       public JweAlgorithm JwaAlgorithmFromHeader(string headerValue)
       {
-         foreach (var pair in keyAlgorithmsHeaderValue)
+         foreach (KeyValuePair<JweAlgorithm, string> pair in keyAlgorithmsHeaderValue)
          {
             if (pair.Value.Equals(headerValue)) return pair.Key;
          }
 
          //try alias
-         JweAlgorithm aliasMatch;
-         if (keyAlgorithmsAliases.TryGetValue(headerValue, out aliasMatch))
+         if (keyAlgorithmsAliases.TryGetValue(headerValue, out JweAlgorithm aliasMatch))
          {
             return aliasMatch;
          }
@@ -305,8 +304,7 @@ namespace Blockcore.Jose
       //Compression
       public ICompression Compression(JweCompression alg)
       {
-         ICompression impl;
-         return compressionAlgorithms.TryGetValue(alg, out impl) ? impl : null;
+         return compressionAlgorithms.TryGetValue(alg, out ICompression impl) ? impl : null;
       }
 
       public ICompression Compression(string alg)
@@ -321,15 +319,13 @@ namespace Blockcore.Jose
 
       public JweCompression CompressionAlgFromHeader(string header)
       {
-         foreach (var pair in jweCompressionHeaderValue)
+         foreach (KeyValuePair<JweCompression, string> pair in jweCompressionHeaderValue)
          {
             if (pair.Value.Equals(header)) return pair.Key;
          }
 
          //try alias
-         JweCompression aliasMatch;
-
-         if (compressionAlgorithmsAliases.TryGetValue(header, out aliasMatch))
+         if (compressionAlgorithmsAliases.TryGetValue(header, out JweCompression aliasMatch))
          {
             return aliasMatch;
          }

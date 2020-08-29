@@ -4,6 +4,13 @@ Fork of the [jose-jwt](https://github.com/dvsekhvalnov/jose-jwt) library, with s
 
 This library only supports the latest version of .NET Core (and soon .NET 5).
 
+## Extensions
+
+- Support for **ES256K** (secp2056k1) algorithm has been added to support Bitcoin-derived keys.
+- Support for reading public key from the header ("kid"). If key is supplied in decode, this overrides the header.
+
+
+
 ## Introduction
 
 Minimallistic zero-dependency library for generating, decoding and encryption [JSON Web Tokens](http://tools.ietf.org/html/draft-jones-json-web-token-10). Supports full suite

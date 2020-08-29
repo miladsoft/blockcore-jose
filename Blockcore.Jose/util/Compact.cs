@@ -11,7 +11,7 @@ namespace Blockcore.Jose
       {
          var builder = new StringBuilder();
 
-         foreach (var part in parts)
+         foreach (byte[] part in parts)
          {
             builder.Append(Base64Url.Encode(part)).Append(".");
          }
@@ -23,13 +23,13 @@ namespace Blockcore.Jose
 
       public static string Serialize(byte[] header, string payload, params byte[][] other)
       {
-         var builder = new StringBuilder()
+         StringBuilder builder = new StringBuilder()
              .Append(Base64Url.Encode(header))
              .Append(".")
              .Append(payload)
              .Append(".");
 
-         foreach (var part in other)
+         foreach (byte[] part in other)
          {
             builder.Append(Base64Url.Encode(part)).Append(".");
          }
@@ -46,7 +46,7 @@ namespace Blockcore.Jose
 
          string[] parts = token.Split('.');
 
-         var result = new byte[parts.Length][];
+         byte[][] result = new byte[parts.Length][];
 
          for (int i = 0; i < parts.Length; i++)
          {
@@ -66,13 +66,13 @@ namespace Blockcore.Jose
 
       public class Iterator
       {
-         private string[] parts;
+         private readonly string[] parts;
          private int current;
 
          public Iterator(string[] parts)
          {
             this.parts = parts;
-            this.current = 0;
+            current = 0;
          }
 
          public int Count
@@ -88,7 +88,6 @@ namespace Blockcore.Jose
 
                return decode ? Base64Url.Decode(part) : Encoding.UTF8.GetBytes(part);
             }
-
 
             return null;
          }

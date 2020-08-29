@@ -9,9 +9,6 @@ using System.Runtime.Serialization;
 
 namespace Blockcore.Features.Storage.Models
 {
-   /// <summary>
-   /// Index 0 to 9 is reserved for usage of the storage feature. All types should start at index 10 for custom fields.
-   /// </summary>
    public abstract class EntityBase
    {
       [StringLength(255, MinimumLength = 1)]

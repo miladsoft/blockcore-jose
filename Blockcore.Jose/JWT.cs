@@ -1,4 +1,5 @@
 using Blockcore.Jose.jwe;
+using NBitcoin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +109,7 @@ namespace Blockcore.Jose
       /// <returns>unmarshalled headers</returns>        
       public static T Headers<T>(string token, JwtSettings settings = null)
       {
-         var parts = Compact.Iterate(token);
+         Compact.Iterator parts = Compact.Iterate(token);
 
          return GetSettings(settings).JsonMapper.Parse<T>(Encoding.UTF8.GetString(parts.Next()));
       }
@@ -123,7 +124,7 @@ namespace Blockcore.Jose
       /// <exception cref="JoseException">if encrypted JWT token is provided</exception>        
       public static string Payload(string token, bool b64 = true)
       {
-         var bytes = PayloadBytes(token, b64);
+         byte[] bytes = PayloadBytes(token, b64);
          return Encoding.UTF8.GetString(bytes);
       }
 
@@ -137,7 +138,7 @@ namespace Blockcore.Jose
       /// <exception cref="JoseException">if encrypted JWT token is provided</exception>        
       public static byte[] PayloadBytes(string token, bool b64 = true)
       {
-         var parts = Compact.Iterate(token);
+         Compact.Iterator parts = Compact.Iterate(token);
 
          if (parts.Count < 3)
          {
@@ -307,8 +308,8 @@ namespace Blockcore.Jose
          if (payload == null)
             throw new ArgumentNullException(nameof(payload));
 
-         var jwtSettings = GetSettings(settings);
-         var jwtOptions = options ?? JwtOptions.Default;
+         JwtSettings jwtSettings = GetSettings(settings);
+         JwtOptions jwtOptions = options ?? JwtOptions.Default;
 
          var jwtHeader = new Dictionary<string, object> { { "alg", jwtSettings.JwsHeaderValue(algorithm) } };
 
@@ -327,7 +328,7 @@ namespace Blockcore.Jose
          Dictionaries.Append(jwtHeader, extraHeaders);
          byte[] headerBytes = Encoding.UTF8.GetBytes(jwtSettings.JsonMapper.Serialize(jwtHeader));
 
-         var jwsAlgorithm = jwtSettings.Jws(algorithm);
+         IJwsAlgorithm jwsAlgorithm = jwtSettings.Jws(algorithm);
 
          if (jwsAlgorithm == null)
          {
@@ -509,7 +510,7 @@ namespace Blockcore.Jose
       {
          Ensure.IsNotEmpty(token, "Incoming token expected to be in compact serialization form, not empty, whitespace or null.");
 
-         var parts = Compact.Iterate(token);
+         Compact.Iterator parts = Compact.Iterate(token);
 
          if (parts.Count == 5) //encrypted JWT
          {
@@ -518,16 +519,15 @@ namespace Blockcore.Jose
          else
          {
             //signed or plain JWT
-            var jwtSettings = GetSettings(settings);
+            JwtSettings jwtSettings = GetSettings(settings);
 
             byte[] header = parts.Next();
 
-            var headerData = jwtSettings.JsonMapper.Parse<Dictionary<string, object>>(Encoding.UTF8.GetString(header));
+            Dictionary<string, object> headerData = jwtSettings.JsonMapper.Parse<Dictionary<string, object>>(Encoding.UTF8.GetString(header));
 
             bool b64 = true;
 
-            object value;
-            if (headerData.TryGetValue("b64", out value))
+            if (headerData.TryGetValue("b64", out object value))
             {
                b64 = (bool)value;
             }
@@ -535,21 +535,35 @@ namespace Blockcore.Jose
             byte[] contentPayload = parts.Next(b64);
             byte[] signature = parts.Next();
 
-            var effectivePayload = payload ?? contentPayload;
+            byte[] effectivePayload = payload ?? contentPayload;
 
-            var algorithm = (string)headerData["alg"];
-            var jwsAlgorithm = jwtSettings.JwsAlgorithmFromHeader(algorithm);
+            string algorithm = (string)headerData["alg"];
+            JwsAlgorithm jwsAlgorithm = jwtSettings.JwsAlgorithmFromHeader(algorithm);
+
             if (expectedJwsAlg != null && expectedJwsAlg != jwsAlgorithm)
             {
                throw new InvalidAlgorithmException(
                    "The algorithm type passed to the Decode method did not match the algorithm type in the header.");
             }
 
-            var jwsAlgorithmImpl = jwtSettings.Jws(jwsAlgorithm);
+            IJwsAlgorithm jwsAlgorithmImpl = jwtSettings.Jws(jwsAlgorithm);
 
             if (jwsAlgorithmImpl == null)
             {
                throw new JoseException(string.Format("Unsupported JWS algorithm requested: {0}", algorithm));
+            }
+
+            // If the key has not been specified, attempt to read it from the header.
+            if (key == null && headerData.ContainsKey("kid"))
+            {
+               if (jwsAlgorithm == JwsAlgorithm.ES256K)
+               {
+                  key = (BitcoinPubKeyAddress)BitcoinPubKeyAddress.Create((string)headerData["kid"], jwtSettings.Network);
+               }
+               else
+               {
+                  key = (string)headerData["kid"];
+               }
             }
 
             if (!jwsAlgorithmImpl.Verify(signature, securedInput(header, effectivePayload, b64), key))
@@ -563,9 +577,9 @@ namespace Blockcore.Jose
 
       private static string Decode(string token, object key = null, JwsAlgorithm? jwsAlg = null, JweAlgorithm? jweAlg = null, JweEncryption? jweEnc = null, JwtSettings settings = null, string payload = null)
       {
-         var detached = payload != null ? Encoding.UTF8.GetBytes(payload) : null;
+         byte[] detached = payload != null ? Encoding.UTF8.GetBytes(payload) : null;
 
-         var payloadBytes = DecodeBytes(token, key, jwsAlg, jweAlg, jweEnc, settings, detached);
+         byte[] payloadBytes = DecodeBytes(token, key, jwsAlg, jweAlg, jweEnc, settings, detached);
 
          return Encoding.UTF8.GetString(payloadBytes);
       }
@@ -614,7 +628,7 @@ namespace Blockcore.Jose
 
          if (jwtHeader.ContainsKey("zip"))
          {
-            var compression = jwtSettings.Compression((string)jwtHeader["zip"]);
+            ICompression compression = jwtSettings.Compression((string)jwtHeader["zip"]);
 
             plainText = compression.Decompress(plainText);
          }

@@ -51,5 +51,5 @@ jobs:
         draft: true
         prerelease: false
         body: ''
-        name: "Blockcore ${{env.VERSION}}"
+        name: "Blockcore.Jose ${{env.VERSION}}"
         tag: ${{env.VERSION}}

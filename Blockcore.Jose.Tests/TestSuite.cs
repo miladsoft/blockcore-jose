@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Blockcore;
 using Blockcore.Features.Storage.Models;
 using Blockcore.Jose;
-using Blockcore.Jose.Tests.Networks;
 using NBitcoin;
 using Newtonsoft.Json;
 using Security.Cryptography;
@@ -18,21 +18,21 @@ namespace UnitTests
 {
    public class TestSuite
    {
-      private TestConsole Console;
+      private readonly TestConsole Console;
 
-      private string key = "a0a2abd8-6162-41c3-83d6-1cf559b46afc";
-      private byte[] aes128Key = new byte[] { 194, 164, 235, 6, 138, 248, 171, 239, 24, 216, 11, 22, 137, 199, 215, 133 };
-      private byte[] aes192Key = new byte[] { 139, 156, 136, 148, 17, 147, 27, 233, 145, 80, 115, 197, 223, 11, 100, 221, 5, 50, 155, 226, 136, 222, 216, 14 };
-      private byte[] aes256Key = new byte[] { 164, 60, 194, 0, 161, 189, 41, 38, 130, 89, 141, 164, 45, 170, 159, 209, 69, 137, 243, 216, 191, 131, 47, 250, 32, 107, 231, 117, 37, 158, 225, 234 };
-      private byte[] aes384Key = new byte[] { 185, 30, 233, 199, 32, 98, 209, 3, 114, 250, 30, 124, 207, 173, 227, 152, 243, 202, 238, 165, 227, 199, 202, 230, 218, 185, 216, 113, 13, 53, 40, 100, 100, 20, 59, 67, 88, 97, 191, 3, 161, 37, 147, 223, 149, 237, 190, 156 };
-      private byte[] aes512Key = new byte[] { 238, 71, 183, 66, 57, 207, 194, 93, 82, 80, 80, 152, 92, 242, 84, 206, 194, 46, 67, 43, 231, 118, 208, 168, 156, 212, 33, 105, 27, 45, 60, 160, 232, 63, 61, 235, 68, 171, 206, 35, 152, 11, 142, 121, 174, 165, 140, 11, 172, 212, 13, 101, 13, 190, 82, 244, 109, 113, 70, 150, 251, 82, 215, 226 };
+      private readonly string key = "a0a2abd8-6162-41c3-83d6-1cf559b46afc";
+      private readonly byte[] aes128Key = new byte[] { 194, 164, 235, 6, 138, 248, 171, 239, 24, 216, 11, 22, 137, 199, 215, 133 };
+      private readonly byte[] aes192Key = new byte[] { 139, 156, 136, 148, 17, 147, 27, 233, 145, 80, 115, 197, 223, 11, 100, 221, 5, 50, 155, 226, 136, 222, 216, 14 };
+      private readonly byte[] aes256Key = new byte[] { 164, 60, 194, 0, 161, 189, 41, 38, 130, 89, 141, 164, 45, 170, 159, 209, 69, 137, 243, 216, 191, 131, 47, 250, 32, 107, 231, 117, 37, 158, 225, 234 };
+      private readonly byte[] aes384Key = new byte[] { 185, 30, 233, 199, 32, 98, 209, 3, 114, 250, 30, 124, 207, 173, 227, 152, 243, 202, 238, 165, 227, 199, 202, 230, 218, 185, 216, 113, 13, 53, 40, 100, 100, 20, 59, 67, 88, 97, 191, 3, 161, 37, 147, 223, 149, 237, 190, 156 };
+      private readonly byte[] aes512Key = new byte[] { 238, 71, 183, 66, 57, 207, 194, 93, 82, 80, 80, 152, 92, 242, 84, 206, 194, 46, 67, 43, 231, 118, 208, 168, 156, 212, 33, 105, 27, 45, 60, 160, 232, 63, 61, 235, 68, 171, 206, 35, 152, 11, 142, 121, 174, 165, 140, 11, 172, 212, 13, 101, 13, 190, 82, 244, 109, 113, 70, 150, 251, 82, 215, 226 };
 
       // The binary payload is a blob consisting of all possible byte values.
-      private byte[] BinaryPayload = Enumerable.Range(byte.MinValue, byte.MaxValue + 1).Select(i => (byte)i).ToArray();
+      private readonly byte[] BinaryPayload = Enumerable.Range(byte.MinValue, byte.MaxValue + 1).Select(i => (byte)i).ToArray();
 
       public TestSuite(ITestOutputHelper output)
       {
-         this.Console = new TestConsole(output);
+         Console = new TestConsole(output);
       }
 
       [Fact]
@@ -42,7 +42,7 @@ namespace UnitTests
          string token = "eyJhbGciOiJub25lIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.";
 
          //when
-         var test = JWT.Decode<IDictionary<string, object>>(token);
+         IDictionary<string, object> test = JWT.Decode<IDictionary<string, object>>(token);
 
          //then
          Assert.Equal(test, new Dictionary<string, object> { { "hello", "world" } });
@@ -88,7 +88,7 @@ namespace UnitTests
 
          string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0-P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn-AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq-wsbKztLW2t7i5uru8vb6_wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t_g4eLj5OXm5-jp6uvs7e7v8PHy8_T19vf4-fr7_P3-_w.3_-H4HJiNi8--Ss-VAMM1Dg0JtTGEXNvMo1LAHEnQ7bZpQiblqAu5tt-G9p8KFnSlSYOG6l64pIqmqu5p5RvuQ";
 
-         var payload = JWT.DecodeBytes(token, Encoding.UTF8.GetBytes(key), JwsAlgorithm.HS512);
+         byte[] payload = JWT.DecodeBytes(token, Encoding.UTF8.GetBytes(key), JwsAlgorithm.HS512);
 
          Console.Out.WriteLine("DecodeBytesHS512: " + BitConverter.ToString(payload));
 
@@ -106,7 +106,7 @@ namespace UnitTests
 
          Console.Out.WriteLine("EncryptAndDecryptBytes_RSA1_5_A256GCM: " + token);
 
-         var payload = JWT.DecodeBytes(token, PrivKey(), JweAlgorithm.RSA1_5, JweEncryption.A256GCM);
+         byte[] payload = JWT.DecodeBytes(token, PrivKey(), JweAlgorithm.RSA1_5, JweEncryption.A256GCM);
 
          Assert.Equal(payload, BinaryPayload);
       }
@@ -119,7 +119,7 @@ namespace UnitTests
              "eyJhbGciOiJIUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.chIoYWrQMA8XL5nFz6oLDJyvgHk2KA4BrFGrKymjC8E";
 
          //when
-         var bytes = Encoding.UTF8.GetBytes(key);
+         byte[] bytes = Encoding.UTF8.GetBytes(key);
 
          Arrays.Dump(bytes);
          string json = JWT.Decode(token, bytes);
@@ -697,12 +697,14 @@ namespace UnitTests
       [Fact]
       public void EncodeES256K_ExtraHeaders()
       {
-         //given data
-         string json = @"{""hello"": ""world""}";
+         // Change the Network configuration if keys are different than the profile network.
+         // JWT.DefaultSettings.Network = new BitcoinNetwork();
 
          ExtKey extKey = ECDSa256KPrivateExtKey();
-         BitcoinPubKeyAddress identity0Address = extKey.PrivateKey.PubKey.GetAddress(ProfileNetwork.Instance);
-         string identifier = "did:is:" + identity0Address.ToString();
+         BitcoinPubKeyAddress identity0Address = extKey.PrivateKey.PubKey.GetAddress(JWT.DefaultSettings.Network);
+
+         string pubkey = identity0Address.ToString();
+         string identifier = "did:is:" + pubkey;
 
          var identity = new Identity
          {
@@ -717,24 +719,23 @@ namespace UnitTests
 
          var header = new Dictionary<string, object>();
          header.Add("typ", "JWT");
-         header.Add("kid", identifier);
+         header.Add("kid", pubkey);
 
-         //when
          string token = JWT.Encode(identity, extKey.PrivateKey, JwsAlgorithm.ES256K, header);
 
-         //then
          Console.Out.WriteLine("ES256K (ECDsa key) = {0}", token);
 
          string[] parts = token.Split('.');
 
          Assert.Equal(3, parts.Length);
-         Assert.Equal("eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJraWQiOiJkaWQ6aXM6UEI3aXpwYWduZFRKazlSNENBd2JCQ1RuN2tkWDRTR2p1UCJ9", parts[0]);
+         Assert.Equal("eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QiLCJraWQiOiJQQjdpenBhZ25kVEprOVI0Q0F3YkJDVG43a2RYNFNHanVQIn0", parts[0]);
          Assert.Equal("eyJuYW1lIjoiSm9obiBEb2UiLCJzaG9ydG5hbWUiOiJKb2huIiwiYWxpYXMiOiJKRCIsInRpdGxlIjoiR29uZSBtaXNzaW5nIiwiZW1haWwiOm51bGwsInVybCI6bnVsbCwiaW1hZ2UiOm51bGwsImh1YnMiOm51bGwsImlkZW50aWZpZXIiOiJkaWQ6aXM6UEI3aXpwYWduZFRKazlSNENBd2JCQ1RuN2tkWDRTR2p1UCIsIkB0eXBlIjoiaWRlbnRpdHkiLCJAc3RhdGUiOjAsImlhdCI6MTU4MDU5ODAwMH0", parts[1]);
-         Assert.Equal("H53s7rMciXAExjWgyteXM4Ldz92DZN1enNv4ymZBTfTYWOyLd-_6-FbM4wZ7ZV187mPF_q4CQadgcj7LtlG97tE", parts[2]);
+         Assert.Equal("IIPDE9bqnSyq-1PtEwx-m8i7kGP0Zc-sM-8cI7XX-nfcJTjpbtk1Q97vYF8Sr2Ola0aE18PX_l4N45p0vreSlvQ", parts[2]);
 
+         // Assert a decode with reading "kid" from either and manually specifying the public key.
+         Assert.Equal(JWT.Decode(token), JsonConvert.SerializeObject(identity));
          Assert.Equal(JWT.Decode(token, ECDSa256KPublic()), JsonConvert.SerializeObject(identity));
       }
-
 
       [Fact]
       public void EncodeES384()
@@ -2644,7 +2645,7 @@ namespace UnitTests
              "eyJhbGciOiJIUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.chIoYWrQMA8XL5nFz6oLDJyvgHk2KA4BrFGrKymjC8E";
 
          //when
-         var test = JWT.Headers(token);
+         IDictionary<string, object> test = JWT.Headers(token);
 
          //then
          Assert.Equal(test.Count, 2);
@@ -2660,7 +2661,7 @@ namespace UnitTests
              "eyJhbGciOiJIUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.chIoYWrQMA8XL5nFz6oLDJyvgHk2KA4BrFGrKymjC8E";
 
          //when
-         var test = JWT.Payload(token);
+         string test = JWT.Payload(token);
 
          //then
          Assert.Equal(test, @"{""hello"": ""world""}");
@@ -2674,7 +2675,7 @@ namespace UnitTests
              "eyJhbGciOiJIUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.chIoYWrQMA8XL5nFz6oLDJyvgHk2KA4BrFGrKymjC8E";
 
          //when
-         var test = JWT.PayloadBytes(token);
+         byte[] test = JWT.PayloadBytes(token);
 
          //then
          Assert.Equal(test, new byte[] { 123, 34, 104, 101, 108, 108, 111, 34, 58, 32, 34, 119, 111, 114, 108, 100, 34, 125 });
@@ -2688,7 +2689,7 @@ namespace UnitTests
              "eyJhbGciOiJIUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.chIoYWrQMA8XL5nFz6oLDJyvgHk2KA4BrFGrKymjC8E";
 
          //when
-         var test = JWT.PayloadBytes(token, false);
+         byte[] test = JWT.PayloadBytes(token, false);
 
          //then
          Assert.Equal(test, new byte[] { 101, 121, 74, 111, 90, 87, 120, 115, 98, 121, 73, 54, 73, 67, 74, 51, 98, 51, 74, 115, 90, 67, 74, 57 });
@@ -2703,7 +2704,7 @@ namespace UnitTests
          //when
          try
          {
-            var test = JWT.Payload(token);
+            string test = JWT.Payload(token);
             Assert.True(false, string.Format("JoseException was expected, but got:{0}", test));
          }
          catch (JoseException e)
@@ -2783,7 +2784,7 @@ namespace UnitTests
 
          Assert.Equal(token, "eyJhbGciOiJIUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0IiwiZXhwIl0sImV4cCI6MTM2MzI4NDAwMH0..9nZCB1H_OMmoTRBe2p5qeq38cyzcjJ6FzUZ9SkeZ4TU");
          Assert.Equal(JWT.Decode(token, Encoding.UTF8.GetBytes(key), payload: @"{""hello"": ""world""}"), json);
-         var tokenHeaders = JWT.Headers(token);
+         IDictionary<string, object> tokenHeaders = JWT.Headers(token);
 
          Assert.Equal(tokenHeaders.Count(), 4);
          Assert.Equal(tokenHeaders["alg"], "HS256");
@@ -2875,7 +2876,7 @@ namespace UnitTests
          string token = "eyJhbGciOiJSUzI1NiIsImN0eSI6InRleHRcL3BsYWluIn0.eyJoZWxsbyI6ICJ3b3JsZCJ9.NL_dfVpZkhNn4bZpCyMq5TmnXbT4yiyecuB6Kax_lV8Yq2dG8wLfea-T4UKnrjLOwxlbwLwuKzffWcnWv3LVAWfeBxhGTa0c4_0TX_wzLnsgLuU6s9M2GBkAIuSMHY6UTFumJlEeRBeiqZNrlqvmAzQ9ppJHfWWkW4stcgLCLMAZbTqvRSppC1SMxnvPXnZSWn_Fk_q3oGKWw6Nf0-j-aOhK0S0Lcr0PV69ZE4xBYM9PUS1MpMe2zF5J3Tqlc1VBcJ94fjDj1F7y8twmMT3H1PI9RozO-21R0SiXZ_a93fxhE_l_dj5drgOek7jUN9uBDjkXUwJPAyp9YPehrjyLdw";
 
          // when
-         var test = JWT.Decode<IDictionary<string, object>>(token, PubKey(), JwsAlgorithm.RS256);
+         IDictionary<string, object> test = JWT.Decode<IDictionary<string, object>>(token, PubKey(), JwsAlgorithm.RS256);
 
          // then
          Assert.Equal(test, new Dictionary<string, object> { { "hello", "world" } });
@@ -2889,7 +2890,7 @@ namespace UnitTests
          string token = JWT.Encode(json, RsaKey.New(PrivKey().ExportParameters(false)), JweAlgorithm.RSA_OAEP_256, JweEncryption.A192GCM);
 
          // when
-         var test = JWT.Decode<IDictionary<string, object>>(token, RsaKey.New(PrivKey().ExportParameters(true)), JweAlgorithm.RSA_OAEP_256, JweEncryption.A192GCM);
+         IDictionary<string, object> test = JWT.Decode<IDictionary<string, object>>(token, RsaKey.New(PrivKey().ExportParameters(true)), JweAlgorithm.RSA_OAEP_256, JweEncryption.A192GCM);
 
          // then
          Assert.Equal(test, new Dictionary<string, object> { { "hello", "world" } });

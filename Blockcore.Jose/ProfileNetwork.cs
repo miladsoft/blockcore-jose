@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NBitcoin;
 
-namespace Blockcore.Jose.Tests.Networks
+namespace Blockcore.Jose
 {
    public class ProfileNetwork : Network
    {
