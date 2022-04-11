@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Version>1.0.2</Version>
-    <RuntimeFrameworkVersion>6.0.102</RuntimeFrameworkVersion>
+    <Version>1.0.3</Version>
+    <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Authors>Blockcore</Authors>
