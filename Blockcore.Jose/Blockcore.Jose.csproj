@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>Blockcore Javascript Object Signing and Encryption (JOSE) for .NET</Description>
     <AssemblyTitle>Blockcore.Jose</AssemblyTitle>
     <AssemblyName>Blockcore.Jose</AssemblyName>
@@ -10,14 +10,15 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>Blockcore</Authors>
     <IsPackable>true</IsPackable>
+    <Version>1.0.3</Version>
 
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;NET461</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
-    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
-    <PackageReference Include="Blockcore.NBitcoin" Version="1.0.*" />
+    <PackageReference Include="Blockcore.Core" Version="1.1.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.*" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
   </ItemGroup>
 </Project>
