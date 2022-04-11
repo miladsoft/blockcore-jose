@@ -20,7 +20,7 @@ jobs:
       SOLUTION_PATH: 'Blockcore.Jose.sln'
       BUILD_CONFIGURATION: 'Release'
 
-     steps:
+    steps:
 
     - uses: actions/checkout@v2
 
