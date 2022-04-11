@@ -2,6 +2,7 @@ using Blockcore.Jose.jwe;
 using System.Collections.Generic;
 using System;
 using NBitcoin;
+using Blockcore.Networks;
 
 namespace Blockcore.Jose
 {
